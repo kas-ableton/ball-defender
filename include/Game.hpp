@@ -1,16 +1,16 @@
+#include "Ball.hpp"
+
 #include <memory>
 #include <vector>
 
 namespace sf {
 class Drawable;
 class Event;
+class CircleShape;
 class RectangleShape;
 class RenderWindow;
 } // namespace sf
 
-namespace bd {
-class Ball;
-}
 
 namespace bd {
 class Game {
@@ -34,6 +34,7 @@ public:
 
 private:
   std::vector<sf::Drawable*> mDrawObjects;
+  std::unique_ptr<sf::CircleShape> mpBall;
   std::unique_ptr<sf::RectangleShape> mpPlayArea;
   sf::RenderWindow* mpWindow;
   int mScore = 0;

@@ -29,8 +29,7 @@ void Game::handleEvent(const sf::Event& event) {
   }
 }
 
-void Game::run() {
-}
+void Game::run() {}
 
 void Game::start() {
   mState = State::LaunchReady;
@@ -43,6 +42,13 @@ void Game::start() {
   mpPlayArea->setPosition(bd::kWindowPadding, bd::kWindowPadding);
 
   mDrawObjects.push_back(mpPlayArea.get());
+
+  mpBall = std::make_unique<sf::CircleShape>(kBallRadius);
+  mpBall->setFillColor(sf::Color(250, 250, 250));
+  mpBall->setPosition(bd::kWindowPadding + mpPlayArea->getSize().x / 2,
+                      mpPlayArea->getSize().y);
+
+  mDrawObjects.push_back(mpBall.get());
 }
 
 enum Game::State Game::state() const { return mState; }
