@@ -9,42 +9,27 @@
 
 constexpr const char* kTitle = "Ball Defender";
 
-int main()
-{
-    auto window = sf::RenderWindow{ { bd::kWindowSizeX, bd::kWindowSizeY }, kTitle, sf::Style::Titlebar | sf::Style::Close };
-    window.setFramerateLimit(144);
+int main() {
+  auto window = sf::RenderWindow{{bd::kWindowSizeX, bd::kWindowSizeY},
+                                 kTitle,
+                                 sf::Style::Titlebar | sf::Style::Close};
+  window.setFramerateLimit(144);
 
-    bd::Game gameInstance(&window);
+  bd::Game gameInstance(&window);
 
-    while (window.isOpen())
-    {
-        for (auto event = sf::Event{}; window.pollEvent(event);)
-        {
-            bool unstarted = gameInstance.State() == bd::Game::State::Unstarted;
+  while (window.isOpen()) {
+    for (auto event = sf::Event{}; window.pollEvent(event);) {
+      if (event.type == sf::Event::Closed) {
+        window.close();
+      }
 
-            if (event.type == sf::Event::Closed)
-            {
-                window.close();
-            }
-            else if (event.type == sf::Event::KeyReleased)
-            {
-              if (unstarted)
-              {
-                gameInstance.Start();
-              }
-            }
-            else if (event.type == sf::Event::MouseButtonPressed)
-            {
-              if (!unstarted)
-              {
-                if (event.mouseButton.button == sf::Mouse::Left)
-                {
-                  // forward to the game?
-                }
-              }
-            }
-        }
+      gameInstance.handleEvent(event);
     }
 
-    return 0;
+    gameInstance.run();
+
+    gameInstance.draw();
+  }
+
+  return 0;
 }

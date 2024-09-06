@@ -1,10 +1,18 @@
-namespace sf
-{
+#include <memory>
+#include <vector>
+
+namespace sf {
+class Drawable;
+class Event;
+class RectangleShape;
 class RenderWindow;
+} // namespace sf
+
+namespace bd {
+class Ball;
 }
 
-namespace bd
-{
+namespace bd {
 class Game {
 public:
   enum class State {
@@ -14,13 +22,21 @@ public:
 
   Game(sf::RenderWindow* window);
 
-  void Start();
+  void draw();
 
-  State State() const;
+  void handleEvent(const sf::Event& event);
+
+  void run();
+
+  void start();
+
+  State state() const;
 
 private:
-  sf::RenderWindow* mWindow;
+  std::vector<sf::Drawable*> mDrawObjects;
+  std::unique_ptr<sf::RectangleShape> mpPlayArea;
+  sf::RenderWindow* mpWindow;
   int mScore = 0;
   enum State mState;
 };
-}
+} // namespace bd
