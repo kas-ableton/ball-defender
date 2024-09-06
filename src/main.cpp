@@ -11,7 +11,7 @@ constexpr const char* kTitle = "Ball Defender";
 
 int main()
 {
-    auto window = sf::RenderWindow{ { 1080u, 1080u }, kTitle, sf::Style::Titlebar | sf::Style::Close };
+    auto window = sf::RenderWindow{ { bd::kWindowSizeX, bd::kWindowSizeY }, kTitle, sf::Style::Titlebar | sf::Style::Close };
     window.setFramerateLimit(144);
 
     bd::Game gameInstance(&window);
