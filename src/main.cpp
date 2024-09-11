@@ -27,8 +27,6 @@ int main() {
     }
 
     gameInstance.run();
-
-    gameInstance.draw();
   }
 
   return 0;

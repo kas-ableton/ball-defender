@@ -1,13 +1,10 @@
-#include "Ball.hpp"
+#include "GameView.hpp"
 
 #include <memory>
 #include <vector>
 
 namespace sf {
-class Drawable;
 class Event;
-class CircleShape;
-class RectangleShape;
 class RenderWindow;
 } // namespace sf
 
@@ -22,8 +19,6 @@ public:
 
   Game(sf::RenderWindow* window);
 
-  void draw();
-
   void handleEvent(const sf::Event& event);
 
   void run();
@@ -33,10 +28,7 @@ public:
   State state() const;
 
 private:
-  std::vector<sf::Drawable*> mDrawObjects;
-  std::unique_ptr<sf::CircleShape> mpBall;
-  std::unique_ptr<sf::RectangleShape> mpPlayArea;
-  sf::RenderWindow* mpWindow;
+  GameView mGameView;
   int mScore = 0;
   enum State mState;
 };
