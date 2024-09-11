@@ -1,12 +1,13 @@
-#include "Constants.hpp"
 #include "GameView.hpp"
+#include "Constants.hpp"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
 namespace bd {
 
-GameView::GameView(sf::RenderWindow* window) : mpWindow(window) {}
+GameView::GameView(sf::RenderWindow* window, GameModel* gameModel)
+    : mpWindow(window), mpGameModel(gameModel) {}
 
 void GameView::addDrawObject(sf::Drawable* object) {
   mDrawObjects.push_back(object);
@@ -22,13 +23,26 @@ void GameView::draw() {
   mpWindow->display();
 }
 
-void GameView::setup() {
+void GameView::handleState() {
+  switch (mpGameModel->getState()) {
+  case GameModel::State::Unstarted:
+    reset();
+  case GameModel::State::LaunchReady:
+    launchReadyState();
+  }
+}
+
+void GameView::launchReadyState() {
+  reset();
+
   mpPlayArea = std::make_unique<sf::RectangleShape>(
       sf::Vector2f(bd::kPlayAreaX, bd::kPlayAreaY));
   mpPlayArea->setFillColor(sf::Color(100, 250, 50));
   mpPlayArea->setPosition(bd::kWindowPadding, bd::kWindowPadding);
 
   addDrawObject(mpPlayArea.get());
+
+  // TODO draw blocks
 
   mpBall = std::make_unique<sf::CircleShape>(kBallRadius);
   mpBall->setFillColor(sf::Color(250, 250, 250));
@@ -38,4 +52,6 @@ void GameView::setup() {
   addDrawObject(mpBall.get());
 }
 
-}
+void GameView::reset() { mDrawObjects.clear(); }
+
+} // namespace bd

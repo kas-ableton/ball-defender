@@ -13,15 +13,19 @@ namespace bd {
 
 class GameView {
 public:
-  GameView(sf::RenderWindow* window);
+  GameView(sf::RenderWindow* window, GameModel* gameModel);
 
   void addDrawObject(sf::Drawable*);
 
   void draw();
 
-  void setup();
+  void launchReadyState();
 
 private:
+  void reset();
+
+  GameModel* mGameModel;
+
   std::vector<sf::Drawable*> mDrawObjects;
   sf::RenderWindow* mpWindow;
 
