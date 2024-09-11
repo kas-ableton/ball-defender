@@ -1,37 +1,31 @@
 #include "Game.hpp"
-#include "Constants.hpp"
 
-#include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
+#include <SFML/Window/Event.hpp>
 
 namespace bd {
 
 Game::Game(sf::RenderWindow* window) : mGameView(window) {}
 
 void Game::handleEvent(const sf::Event& event) {
-  if (mState == bd::Game::State::Unstarted) {
+  if (mGameModel.state() == bd::GameModel::State::Unstarted) {
     if (event.type == sf::Event::MouseButtonReleased) {
       start();
     }
-  } else if (mState == bd::Game::State::LaunchReady) {
+  } else if (mGameModel.state() == bd::GameModel::State::LaunchReady) {
     if (event.type == sf::Event::MouseButtonReleased) {
     }
   }
 }
 
-void Game::run() {
-  mGameView.draw();
-}
+void Game::run() { mGameView.draw(); }
 
 void Game::start() {
-  mState = State::LaunchReady;
+  mGameModel.setState(GameModel::State::LaunchReady);
 
-  mScore = 0;
-
+  mGameModel.resetScore();
 
   mGameView.setup();
 }
-
-enum Game::State Game::state() const { return mState; }
 
 } // namespace bd

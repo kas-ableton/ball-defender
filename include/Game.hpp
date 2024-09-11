@@ -1,4 +1,7 @@
+#pragma once
+
 #include "GameView.hpp"
+#include "GameModel.hpp"
 
 #include <memory>
 #include <vector>
@@ -12,11 +15,6 @@ class RenderWindow;
 namespace bd {
 class Game {
 public:
-  enum class State {
-    Unstarted,
-    LaunchReady,
-  };
-
   Game(sf::RenderWindow* window);
 
   void handleEvent(const sf::Event& event);
@@ -25,11 +23,8 @@ public:
 
   void start();
 
-  State state() const;
-
 private:
   GameView mGameView;
-  int mScore = 0;
-  enum State mState;
+  GameModel mGameModel;
 };
 } // namespace bd
