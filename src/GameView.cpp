@@ -24,11 +24,16 @@ void GameView::draw() {
 }
 
 void GameView::handleState() {
-  switch (mpGameModel->getState()) {
+  switch (mpGameModel->state()) {
   case GameModel::State::Unstarted:
     reset();
   case GameModel::State::LaunchReady:
     launchReadyState();
+  case GameModel::State::BallInMotion:
+    // add observer to GameModel::ballPosition()
+  case GameModel::State::BallDead:
+  default:
+    reset();
   }
 }
 

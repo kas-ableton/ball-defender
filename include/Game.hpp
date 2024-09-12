@@ -24,7 +24,7 @@ public:
   void start();
 
 private:
-  GameView mGameView;
   GameModel mGameModel;
+  GameView mGameView;
 };
 } // namespace bd

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "GameModel.hpp"
+
 #include <SFML/Graphics.hpp>
 
 #include <vector>
@@ -10,6 +12,7 @@ class RenderWindow;
 } // namespace sf
 
 namespace bd {
+class GameModel;
 
 class GameView {
 public:
@@ -19,12 +22,14 @@ public:
 
   void draw();
 
+  void handleState();
+
   void launchReadyState();
 
 private:
   void reset();
 
-  GameModel* mGameModel;
+  GameModel* mpGameModel;
 
   std::vector<sf::Drawable*> mDrawObjects;
   sf::RenderWindow* mpWindow;
