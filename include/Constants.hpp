@@ -11,4 +11,6 @@ constexpr int kPlayAreaX = 700;
 constexpr int kPlayAreaY = kWindowSizeY - (2 * kWindowPadding);
 
 constexpr unsigned int kBallRadius = 10;
+constexpr int kBallStartPosX = kWindowPadding + kPlayAreaX / 2;
+constexpr int kBallStartPosY = kPlayAreaY;
 } // namespace bd

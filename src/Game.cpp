@@ -1,3 +1,4 @@
+#include "Constants.hpp"
 #include "Game.hpp"
 #include "Point.hpp"
 
@@ -6,7 +7,9 @@
 
 namespace bd {
 
-Game::Game(sf::RenderWindow* window) : mGameView(window, &mGameModel) {}
+Game::Game(sf::RenderWindow* window)
+    : mGameModel({bd::kBallStartPosX, bd::kBallStartPosY}),
+      mGameView(window, &mGameModel) {}
 
 void Game::handleEvent(const sf::Event& event) {
   if (mGameModel.state() == bd::GameModel::State::Unstarted) {

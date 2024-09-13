@@ -1,5 +1,5 @@
-#include "Constants.hpp"
 #include "GameModel.hpp"
+#include "Constants.hpp"
 #include "Point.hpp"
 
 #include <algorithm>
@@ -8,6 +8,9 @@
 namespace bd {
 
 struct Point;
+
+GameModel::GameModel(Point&& ballStartPos)
+    : mBallPosition(std::move(ballStartPos)) {}
 
 void GameModel::updateBallPosition() {
   if (state() == State::BallInMotion) {

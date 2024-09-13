@@ -51,8 +51,7 @@ void GameView::launchReadyState() {
 
   mpBall = std::make_unique<sf::CircleShape>(kBallRadius);
   mpBall->setFillColor(sf::Color(250, 250, 250));
-  mpBall->setPosition(bd::kWindowPadding + mpPlayArea->getSize().x / 2,
-                      mpPlayArea->getSize().y);
+  mpBall->setPosition(bd::kBallStartPosX, bd::kBallStartPosY);
 
   addDrawObject(mpBall.get());
 }

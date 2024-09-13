@@ -25,6 +25,8 @@ public:
     BallDead,
   };
 
+  GameModel(Point&& ballStartPos);
+
   void updateBallPosition();
   Point ballPosition() const;
 
