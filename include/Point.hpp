@@ -12,6 +12,10 @@ struct Point {
            y != std::numeric_limits<int>::max();
   }
 
+  bool operator==(const Point& rhs) const {
+    return x == rhs.x && y == rhs.y;
+  }
+
   int x;
   int y;
 };

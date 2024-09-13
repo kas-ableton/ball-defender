@@ -6,15 +6,14 @@
 
 namespace bd {
 
-namespace {
 class Launch {
 public:
-  static const int xDisplacement = 2;
-  int yDisplacement = std::numeric_limits<int>::min();
+  static constexpr float xDisplacement = 2.0f;
+  int mXDirection = 1;
+  float yDisplacement = std::numeric_limits<float>::min();
   Point startPos;
   Point endPos;
 };
-} // namespace
 
 class GameModel {
 public:
@@ -41,6 +40,8 @@ public:
 
 private:
   Launch mBallLaunch;
+  float mInternalBallPosX;
+  float mInternalBallPosY;
   Point mBallPosition;
   int mScore = 0;
   enum State mState = State::Unstarted;

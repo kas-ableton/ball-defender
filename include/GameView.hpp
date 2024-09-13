@@ -26,6 +26,8 @@ public:
 
   void launchReadyState();
 
+  void onBallPositionChanged(const Point& newPos);
+
 private:
   void reset();
 

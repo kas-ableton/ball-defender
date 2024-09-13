@@ -14,6 +14,12 @@ void GameView::addDrawObject(sf::Drawable* object) {
 }
 
 void GameView::draw() {
+  // Temporary solution until observer pattern set up
+  if (mpGameModel->state() == bd::GameModel::State::BallInMotion) {
+    mpBall->setPosition(mpGameModel->ballPosition().x,
+                        mpGameModel->ballPosition().y);
+  }
+
   mpWindow->clear();
 
   for (const auto& obj : mDrawObjects) {
@@ -27,13 +33,17 @@ void GameView::handleState() {
   switch (mpGameModel->state()) {
   case GameModel::State::Unstarted:
     reset();
+    break;
   case GameModel::State::LaunchReady:
     launchReadyState();
+    break;
   case GameModel::State::BallInMotion:
     // add observer to GameModel::ballPosition()
+    break;
   case GameModel::State::BallDead:
+    break;
   default:
-    reset();
+    break;
   }
 }
 

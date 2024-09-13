@@ -28,7 +28,10 @@ void Game::handleEvent(const sf::Event& event) {
   }
 }
 
-void Game::run() { mGameView.draw(); }
+void Game::run() {
+  mGameModel.updateBallPosition();
+  mGameView.draw();
+}
 
 void Game::start() {
   mGameModel.setState(GameModel::State::LaunchReady);
