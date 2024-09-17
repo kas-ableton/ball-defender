@@ -40,14 +40,14 @@ void GameModel::onLaunchEnd(Point&& endPos) {
     mBallLaunch.yDisplacement = 0.0f;
   }
 
-  mBallLaunch.mXDirection =
+  mBallLaunch.xDirection =
       mBallLaunch.endPos.x() > mBallLaunch.startPos.x() ? 1 : -1;
 
   int xMove = mBallLaunch.endPos.x() - mBallLaunch.startPos.x();
   int yMove = mBallLaunch.endPos.y() - mBallLaunch.startPos.y();
 
   mBallLaunch.yDisplacement =
-      mBallLaunch.xDisplacement * mBallLaunch.mXDirection * yMove / xMove;
+      mBallLaunch.xDisplacement * mBallLaunch.xDirection * yMove / xMove;
 }
 
 void GameModel::onLaunchStart(Point&& startPos) {
