@@ -34,18 +34,29 @@ void GameModel::updateBallPosition() {
 Point GameModel::ballPosition() const { return mBallPosition; }
 
 void GameModel::onLaunchEnd(Point&& endPos) {
+  // save release point of launch
   mBallLaunch.endPos = endPos;
 
+  // misfire
   if (mBallLaunch.endPos == mBallLaunch.startPos) {
     mBallLaunch.yDisplacement = 0.0f;
   }
 
+  // save if launch was left or right
   mBallLaunch.xDirection =
       mBallLaunch.endPos.x() > mBallLaunch.startPos.x() ? 1 : -1;
 
   int xMove = mBallLaunch.endPos.x() - mBallLaunch.startPos.x();
   int yMove = mBallLaunch.endPos.y() - mBallLaunch.startPos.y();
 
+  // avoid division by zero
+  if (xMove == 0) {
+    mBallLaunch.yDisplacement = mBallLaunch.xDisplacement;
+    mBallLaunch.xDisplacement = 0.0;
+    return;
+  }
+
+  // calculate how much ball will move in the y-direction on every update
   mBallLaunch.yDisplacement =
       mBallLaunch.xDisplacement * mBallLaunch.xDirection * yMove / xMove;
 }
