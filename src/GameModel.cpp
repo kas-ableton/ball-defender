@@ -17,17 +17,17 @@ void GameModel::updateBallPosition() {
   if (state() == State::BallInMotion) {
     assert(mBallLaunch.yDisplacement != std::numeric_limits<float>::min());
 
-    auto newXPos =
-        mBallPosition.x + (mBallLaunch.xDisplacement * mBallLaunch.mXDirection);
-    auto newYPos = mBallPosition.y + mBallLaunch.yDisplacement;
+    auto newXPos = mBallPosition.x() +
+                   (mBallLaunch.xDisplacement * mBallLaunch.xDirection);
+    auto newYPos = mBallPosition.y() + mBallLaunch.yDisplacement;
 
     mInternalBallPosX =
         std::clamp(newXPos, 0.0f, static_cast<float>(kPlayAreaX));
     mInternalBallPosY =
         std::clamp(newYPos, 0.0f, static_cast<float>(kPlayAreaY));
 
-    mBallPosition.x = static_cast<int>(mInternalBallPosX);
-    mBallPosition.y = static_cast<int>(mInternalBallPosY);
+    mBallPosition.setX(static_cast<int>(mInternalBallPosX));
+    mBallPosition.setY(static_cast<int>(mInternalBallPosY));
   }
 }
 
@@ -41,10 +41,10 @@ void GameModel::onLaunchEnd(Point&& endPos) {
   }
 
   mBallLaunch.mXDirection =
-      mBallLaunch.endPos.x > mBallLaunch.startPos.x ? 1 : -1;
+      mBallLaunch.endPos.x() > mBallLaunch.startPos.x() ? 1 : -1;
 
-  int xMove = mBallLaunch.endPos.x - mBallLaunch.startPos.x;
-  int yMove = mBallLaunch.endPos.y - mBallLaunch.startPos.y;
+  int xMove = mBallLaunch.endPos.x() - mBallLaunch.startPos.x();
+  int yMove = mBallLaunch.endPos.y() - mBallLaunch.startPos.y();
 
   mBallLaunch.yDisplacement =
       mBallLaunch.xDisplacement * mBallLaunch.mXDirection * yMove / xMove;

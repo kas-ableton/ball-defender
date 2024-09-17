@@ -8,15 +8,23 @@ struct Point {
   Point(int _x, int _y);
 
   explicit operator bool() const {
-    return x != std::numeric_limits<int>::max() &&
-           y != std::numeric_limits<int>::max();
+    return mX != std::numeric_limits<int>::max() &&
+           mY != std::numeric_limits<int>::max();
   }
 
   bool operator==(const Point& rhs) const {
-    return x == rhs.x && y == rhs.y;
+    return mX == rhs.x() && mY == rhs.y();
   }
 
-  int x;
-  int y;
+  void setX(int _x);
+  void setY(int _y);
+  void set(int _x, int _y);
+
+  int x() const;
+  int y() const;
+
+private:
+  int mX;
+  int mY;
 };
 } // namespace bd
