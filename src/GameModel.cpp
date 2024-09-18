@@ -20,9 +20,10 @@ void GameModel::updateBallPosition() {
       mState = bd::GameModel::State::BallDead;
     }
 
-    auto newXPos = mBallPosition.x() +
-                   (mBallLaunch.xDisplacement * bd::kVelocity);
-    auto newYPos = mBallPosition.y() + mBallLaunch.yDisplacement * bd::kVelocity;
+    auto newXPos =
+        mBallPosition.x() + (mBallLaunch.xDisplacement * bd::kVelocity);
+    auto newYPos =
+        mBallPosition.y() + mBallLaunch.yDisplacement * bd::kVelocity;
 
     mInternalBallPosX =
         std::clamp(newXPos, 0.0f, static_cast<float>(kPlayAreaX));

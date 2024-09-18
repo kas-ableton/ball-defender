@@ -8,8 +8,7 @@ namespace bd {
 
 class Launch {
 public:
-  float xDisplacement = 2.0f;
-  int xDirection = 1;
+  float xDisplacement = std::numeric_limits<float>::min();
   float yDisplacement = std::numeric_limits<float>::min();
   Point startPos;
   Point endPos;
