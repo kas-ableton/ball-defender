@@ -4,6 +4,8 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
+#include <iostream>
+
 namespace bd {
 
 GameView::GameView(sf::RenderWindow* window, GameModel* gameModel)
@@ -19,6 +21,9 @@ void GameView::draw() {
     mpBall->setPosition(mpGameModel->ballPosition().x(),
                         mpGameModel->ballPosition().y());
   }
+
+  std::cout << mpGameModel->ballPosition().x() << ',';
+  std::cout << mpGameModel->ballPosition().y() << '\n';
 
   mpWindow->clear();
 

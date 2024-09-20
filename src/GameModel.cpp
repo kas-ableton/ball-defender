@@ -12,23 +12,26 @@ namespace bd {
 struct Point;
 
 GameModel::GameModel(Point&& ballStartPos)
-    : mBallPosition(std::move(ballStartPos)) {}
+    : mBallPosition(std::move(ballStartPos)),
+    mInternalBallPosX(ballStartPos.x()),
+    mInternalBallPosY(ballStartPos.y())
+{}
 
 void GameModel::updateBallPosition() {
   if (state() == State::BallInMotion) {
-    if (mBallLaunch.yDisplacement != std::numeric_limits<float>::min()) {
-      mState = bd::GameModel::State::BallDead;
-    }
 
     auto newXPos =
-        mBallPosition.x() + (mBallLaunch.xDisplacement * bd::kVelocity);
+        mInternalBallPosX + (mBallLaunch.xDisplacement * bd::kVelocity);
     auto newYPos =
-        mBallPosition.y() + mBallLaunch.yDisplacement * bd::kVelocity;
+        mInternalBallPosY + mBallLaunch.yDisplacement * bd::kVelocity;
 
     mInternalBallPosX =
         std::clamp(newXPos, 0.0f, static_cast<float>(kPlayAreaX));
     mInternalBallPosY =
         std::clamp(newYPos, 0.0f, static_cast<float>(kPlayAreaY));
+
+  std::cout << 'f' << mInternalBallPosX << ',';
+  std::cout << mInternalBallPosY << '\n';
 
     mBallPosition.setX(static_cast<int>(mInternalBallPosX));
     mBallPosition.setY(static_cast<int>(mInternalBallPosY));
