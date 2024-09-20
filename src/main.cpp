@@ -25,8 +25,11 @@ int main() {
 
       gameInstance.handleEvent(event);
     }
+    window->clear();
 
     gameInstance.run();
+
+    window->display();
   }
 
   return 0;

@@ -3,7 +3,7 @@
 #include "Point.hpp"
 
 #include <algorithm>
-#include <cassert>
+#include <functional>
 #include <cmath>
 #include <iostream>
 
@@ -15,7 +15,9 @@ GameModel::GameModel(Point&& ballStartPos)
     : mBallPosition(std::move(ballStartPos)),
     mInternalBallPosX(ballStartPos.x()),
     mInternalBallPosY(ballStartPos.y())
-{}
+{
+  //mBallPosition.addObserver();
+}
 
 void GameModel::updateBallPosition() {
   if (state() == State::BallInMotion) {
@@ -38,6 +40,14 @@ void GameModel::updateBallPosition() {
   }
 }
 
+void GameModel::onBallPositionChanged() {
+  std::cout << mBallPosition.x() << ',' <<mBallPosition.y() << '\n';
+  // check for collisions
+  // update mBallLaunch
+  // change state when ball is dead
+  // etc
+}
+
 Point GameModel::ballPosition() const { return mBallPosition; }
 
 void GameModel::onLaunchEnd(Point&& endPos) {
@@ -52,7 +62,9 @@ void GameModel::onLaunchEnd(Point&& endPos) {
   int xMove = mBallLaunch.endPos.x() - mBallLaunch.startPos.x();
   int yMove = mBallLaunch.endPos.y() - mBallLaunch.startPos.y();
 
+  // length of the vector
   auto r = std::sqrt(xMove * xMove + yMove * yMove);
+
   // get normalized values of x and y
   mBallLaunch.yDisplacement = yMove / r;
   mBallLaunch.xDisplacement = xMove / r;

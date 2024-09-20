@@ -10,7 +10,7 @@ FetchContent_Declare(SFML
     GIT_TAG 2.6.x)
 FetchContent_MakeAvailable(SFML)
 
-add_executable(main src/main.cpp src/Game.cpp src/GameView.cpp src/GameModel.cpp src/Point.cpp)
+add_executable(main src/main.cpp src/Game.cpp src/GameView.cpp src/GameModel.cpp src/Point.cpp src/PointSubject.cpp)
 target_link_libraries(main PRIVATE sfml-graphics)
 target_include_directories(main PRIVATE include)
 target_compile_features(main PRIVATE cxx_std_17)

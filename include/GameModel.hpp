@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Point.hpp"
+#include "PointSubject.hpp"
 
 #include <limits>
 
@@ -25,6 +25,7 @@ public:
 
   GameModel(Point&& ballStartPos);
 
+  void onBallPositionChanged();
   void updateBallPosition();
   Point ballPosition() const;
 
@@ -41,7 +42,7 @@ private:
   Launch mBallLaunch;
   float mInternalBallPosX;
   float mInternalBallPosY;
-  Point mBallPosition;
+  PointSubject mBallPosition;
   int mScore = 0;
   enum State mState = State::Unstarted;
 };
