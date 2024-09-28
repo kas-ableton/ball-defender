@@ -39,8 +39,6 @@ void Game::start() {
   mGameModel.setState(GameModel::State::LaunchReady);
 
   mGameModel.resetScore();
-
-  mGameView.handleState();
 }
 
 } // namespace bd

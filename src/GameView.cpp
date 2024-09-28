@@ -38,12 +38,24 @@ void GameView::draw() {
   reset();
 
   if (mpGameModel->state() != bd::GameModel::State::Unstarted) {
-      addPlayAreaToDrawObjects();
+    addPlayAreaToDrawObjects();
   }
 
-  if (mpGameModel->state() == bd::GameModel::State::BallInMotion) {
+  switch (mpGameModel->state()) {
+  case GameModel::State::Unstarted:
+    // TODO draw start screen
+    break;
+  case GameModel::State::LaunchReady:
+    addBallToDrawObjects(bd::kBallStartPosX, bd::kBallStartPosY);
+    break;
+  case GameModel::State::BallInMotion:
     addBallToDrawObjects(mpGameModel->ballPosition().x(),
                          mpGameModel->ballPosition().y());
+    break;
+  case GameModel::State::BallDead:
+    break;
+  default:
+    break;
   }
 
   for (const auto& obj : mDrawObjects) {
@@ -51,29 +63,6 @@ void GameView::draw() {
   }
 }
 
-void GameView::handleState() {
-  switch (mpGameModel->state()) {
-  case GameModel::State::Unstarted:
-    reset();
-    break;
-  case GameModel::State::LaunchReady:
-    launchReadyState();
-    break;
-  case GameModel::State::BallInMotion:
-    // add observer to GameModel::ballPosition()
-    break;
-  case GameModel::State::BallDead:
-    break;
-  default:
-    break;
-  }
-}
-
-void GameView::launchReadyState() {
-  reset();
-  addPlayAreaToDrawObjects();
-  addBallToDrawObjects(bd::kBallStartPosX, bd::kBallStartPosY);
-}
 
 void GameView::reset() { mDrawObjects.clear(); }
 

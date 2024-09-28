@@ -24,12 +24,6 @@ public:
 
   void draw();
 
-  void handleState();
-
-  void launchReadyState();
-
-  void onBallPositionChanged(const Point& newPos);
-
 private:
   void reset();
 
