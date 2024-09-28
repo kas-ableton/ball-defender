@@ -40,9 +40,9 @@ public:
 
 private:
   Launch mBallLaunch;
+  PointSubject mBallPosition;
   float mInternalBallPosX;
   float mInternalBallPosY;
-  PointSubject mBallPosition;
   int mScore = 0;
   enum State mState = State::Unstarted;
 };

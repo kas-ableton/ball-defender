@@ -11,27 +11,44 @@ namespace bd {
 GameView::GameView(sf::RenderWindow* window, GameModel* gameModel)
     : mpWindow(window), mpGameModel(gameModel) {}
 
-void GameView::addDrawObject(sf::Drawable* object) {
-  mDrawObjects.push_back(object);
+void GameView::addDrawObject(std::unique_ptr<sf::Drawable> object) {
+  mDrawObjects.emplace_back(std::move(object));
+}
+
+void GameView::addPlayAreaToDrawObjects() {
+  auto pPlayArea = std::make_unique<sf::RectangleShape>(
+      sf::Vector2f(bd::kPlayAreaX, bd::kPlayAreaY));
+
+  pPlayArea->setFillColor(sf::Color(100, 250, 50));
+  pPlayArea->setPosition(bd::kWindowPadding, bd::kWindowPadding);
+
+  addDrawObject(std::move(pPlayArea));
+}
+
+void GameView::addBallToDrawObjects(int x, int y) {
+  auto pBall = std::make_unique<sf::CircleShape>(kBallRadius);
+
+  pBall->setFillColor(sf::Color(250, 250, 250));
+  pBall->setPosition(x, y);
+
+  addDrawObject(std::move(pBall));
 }
 
 void GameView::draw() {
-  // Temporary solution until observer pattern set up
-  if (mpGameModel->state() == bd::GameModel::State::BallInMotion) {
-    mpBall->setPosition(mpGameModel->ballPosition().x(),
-                        mpGameModel->ballPosition().y());
+  reset();
+
+  if (mpGameModel->state() != bd::GameModel::State::Unstarted) {
+      addPlayAreaToDrawObjects();
   }
 
-  std::cout << mpGameModel->ballPosition().x() << ',';
-  std::cout << mpGameModel->ballPosition().y() << '\n';
-
-  mpWindow->clear();
+  if (mpGameModel->state() == bd::GameModel::State::BallInMotion) {
+    addBallToDrawObjects(mpGameModel->ballPosition().x(),
+                         mpGameModel->ballPosition().y());
+  }
 
   for (const auto& obj : mDrawObjects) {
     mpWindow->draw(*obj);
   }
-
-  mpWindow->display();
 }
 
 void GameView::handleState() {
@@ -54,21 +71,8 @@ void GameView::handleState() {
 
 void GameView::launchReadyState() {
   reset();
-
-  mpPlayArea = std::make_unique<sf::RectangleShape>(
-      sf::Vector2f(bd::kPlayAreaX, bd::kPlayAreaY));
-  mpPlayArea->setFillColor(sf::Color(100, 250, 50));
-  mpPlayArea->setPosition(bd::kWindowPadding, bd::kWindowPadding);
-
-  addDrawObject(mpPlayArea.get());
-
-  // TODO draw blocks
-
-  mpBall = std::make_unique<sf::CircleShape>(kBallRadius);
-  mpBall->setFillColor(sf::Color(250, 250, 250));
-  mpBall->setPosition(bd::kBallStartPosX, bd::kBallStartPosY);
-
-  addDrawObject(mpBall.get());
+  addPlayAreaToDrawObjects();
+  addBallToDrawObjects(bd::kBallStartPosX, bd::kBallStartPosY);
 }
 
 void GameView::reset() { mDrawObjects.clear(); }

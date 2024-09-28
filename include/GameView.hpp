@@ -18,7 +18,9 @@ class GameView {
 public:
   GameView(sf::RenderWindow* window, GameModel* gameModel);
 
-  void addDrawObject(sf::Drawable*);
+  void addDrawObject(std::unique_ptr<sf::Drawable> object);
+  void addBallToDrawObjects(int x, int y);
+  void addPlayAreaToDrawObjects();
 
   void draw();
 
@@ -31,10 +33,11 @@ public:
 private:
   void reset();
 
+  sf::RenderWindow* mpWindow;
+
   GameModel* mpGameModel;
 
-  std::vector<sf::Drawable*> mDrawObjects;
-  sf::RenderWindow* mpWindow;
+  std::vector<std::unique_ptr<sf::Drawable>> mDrawObjects;
 
   std::unique_ptr<sf::CircleShape> mpBall;
   std::unique_ptr<sf::RectangleShape> mpPlayArea;
