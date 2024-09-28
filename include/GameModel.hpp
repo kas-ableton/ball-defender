@@ -1,18 +1,9 @@
 #pragma once
 
 #include "PointSubject.hpp"
-
-#include <limits>
+#include "Vector.hpp"
 
 namespace bd {
-
-class Launch {
-public:
-  float xDisplacement = std::numeric_limits<float>::min();
-  float yDisplacement = std::numeric_limits<float>::min();
-  Point startPos;
-  Point endPos;
-};
 
 class GameModel {
 public:
@@ -29,8 +20,7 @@ public:
   void updateBallPosition();
   Point ballPosition() const;
 
-  void onLaunchEnd(Point&& endPos);
-  void onLaunchStart(Point&& startPos);
+  void onBallLaunch(Point&& startPos, Point&& endPos);
 
   void resetScore();
   int score() const;
@@ -39,7 +29,7 @@ public:
   State state() const;
 
 private:
-  Launch mBallLaunch;
+  Vector mBallVector;
   PointSubject mBallPosition;
   float mInternalBallPosX;
   float mInternalBallPosY;

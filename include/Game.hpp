@@ -2,6 +2,7 @@
 
 #include "GameView.hpp"
 #include "GameModel.hpp"
+#include "Point.hpp"
 
 #include <memory>
 #include <vector>
@@ -26,5 +27,7 @@ public:
 private:
   GameModel mGameModel;
   GameView mGameView;
+
+  Point mLaunchStart;
 };
 } // namespace bd

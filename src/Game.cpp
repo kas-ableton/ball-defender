@@ -1,5 +1,5 @@
-#include "Constants.hpp"
 #include "Game.hpp"
+#include "Constants.hpp"
 #include "Point.hpp"
 
 #include <SFML/Window.hpp>
@@ -18,9 +18,11 @@ void Game::handleEvent(const sf::Event& event) {
     }
   } else if (mGameModel.state() == bd::GameModel::State::LaunchReady) {
     if (event.type == sf::Event::MouseButtonPressed) {
-      mGameModel.onLaunchStart({event.mouseButton.x, event.mouseButton.y});
+      mLaunchStart = {event.mouseButton.x, event.mouseButton.y};
     } else if (event.type == sf::Event::MouseButtonReleased) {
-      mGameModel.onLaunchEnd({event.mouseButton.x, event.mouseButton.y});
+      // assert(mLaunchStart, "mLaunchStart invalid");
+      mGameModel.onBallLaunch(std::move(mLaunchStart),
+                              {event.mouseButton.x, event.mouseButton.y});
       mGameModel.setState(GameModel::State::BallInMotion);
     }
   } else if (mGameModel.state() == bd::GameModel::State::BallInMotion) {
