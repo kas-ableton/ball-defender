@@ -5,8 +5,7 @@
 #include <cmath>
 
 namespace bd {
-Vector::Vector(Point&& startPos, Point&& endPos)
-{
+Vector::Vector(Point&& startPos, Point&& endPos) {
   int xMove = startPos.x() - endPos.x();
   int yMove = startPos.y() - endPos.y();
 
@@ -17,4 +16,12 @@ Vector::Vector(Point&& startPos, Point&& endPos)
   yDelta = yMove / r;
   xDelta = xMove / r;
 }
+
+void Vector::reflect(const Axis axis) {
+  if (axis == Axis::Y) {
+    xDelta *= -1;
+  } else {
+    yDelta *= -1;
+  }
 }
+} // namespace bd

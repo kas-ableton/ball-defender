@@ -7,8 +7,14 @@ class Point;
 
 class Vector {
 public:
+    enum class Axis {
+        X,
+        Y,
+    };
   Vector() = default;
   Vector(Point&& startPos, Point&& endPos);
+
+  void reflect(const Axis axis);
 
   float xDelta = std::numeric_limits<float>::min();
   float yDelta = std::numeric_limits<float>::min();

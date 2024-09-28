@@ -1,10 +1,11 @@
 #include "GameModel.hpp"
-#include "Constants.hpp"
-#include "Point.hpp"
 
 #include <algorithm>
 #include <functional>
 #include <iostream>
+
+#include "Constants.hpp"
+#include "Point.hpp"
 
 namespace bd {
 
@@ -15,9 +16,22 @@ GameModel::GameModel(Point&& ballStartPos)
       mInternalBallPosX(ballStartPos.x()), mInternalBallPosY(ballStartPos.y()) {
 }
 
+void GameModel::updateBallVector() {
+  if (mBallPosition.x() == kPlayAreaX || mBallPosition.x() == 0) {
+    mBallVector.reflect(Vector::Axis::Y);
+  }
+
+  if (mBallPosition.y() == 0) {
+    mBallVector.reflect(Vector::Axis::X);
+  }
+
+  if (mBallPosition.y() == kPlayAreaY) {
+    setState(State::BallDead);
+  }
+}
+
 void GameModel::updateBallPosition() {
   if (state() == State::BallInMotion) {
-
     auto newXPos = mInternalBallPosX + (mBallVector.xDelta * bd::kVelocity);
     auto newYPos = mInternalBallPosY + mBallVector.yDelta * bd::kVelocity;
 
@@ -26,16 +40,14 @@ void GameModel::updateBallPosition() {
     mInternalBallPosY =
         std::clamp(newYPos, 0.0f, static_cast<float>(kPlayAreaY));
 
-    std::cout << 'f' << mInternalBallPosX << ',';
-    std::cout << mInternalBallPosY << '\n';
-
     mBallPosition.setX(static_cast<int>(mInternalBallPosX));
     mBallPosition.setY(static_cast<int>(mInternalBallPosY));
+
+    updateBallVector();
   }
 }
 
 void GameModel::onBallPositionChanged() {
-  std::cout << mBallPosition.x() << ',' << mBallPosition.y() << '\n';
   // check for collisions
   // update mBallLaunch
   // change state when ball is dead

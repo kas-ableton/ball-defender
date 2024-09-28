@@ -17,6 +17,7 @@ public:
   GameModel(Point&& ballStartPos);
 
   void onBallPositionChanged();
+  void updateBallVector();
   void updateBallPosition();
   Point ballPosition() const;
 
