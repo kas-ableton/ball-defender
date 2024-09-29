@@ -46,11 +46,12 @@ void GameView::draw() {
     // TODO draw start screen
     break;
   case GameModel::State::LaunchReady:
-    addBallToDrawObjects(bd::kBallStartPosX, bd::kBallStartPosY);
+    addBallToDrawObjects(mpGameModel->ball().position().x(),
+                         mpGameModel->ball().position().y());
     break;
   case GameModel::State::BallInMotion:
-    addBallToDrawObjects(mpGameModel->ballPosition().x(),
-                         mpGameModel->ballPosition().y());
+    addBallToDrawObjects(mpGameModel->ball().position().x(),
+                         mpGameModel->ball().position().y());
     break;
   case GameModel::State::BallDead:
     break;

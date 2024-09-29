@@ -21,7 +21,7 @@ void Game::handleEvent(const sf::Event& event) {
       mLaunchStart = {event.mouseButton.x, event.mouseButton.y};
     } else if (event.type == sf::Event::MouseButtonReleased) {
       // assert(mLaunchStart, "mLaunchStart invalid");
-      mGameModel.onBallLaunch(std::move(mLaunchStart),
+      mGameModel.ball().onLaunch(std::move(mLaunchStart),
                               {event.mouseButton.x, event.mouseButton.y});
       mGameModel.setState(GameModel::State::BallInMotion);
     }

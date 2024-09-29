@@ -1,6 +1,6 @@
 #pragma once
 
-#include "PointSubject.hpp"
+#include "Ball.hpp"
 #include "Vector.hpp"
 
 #include <functional>
@@ -26,12 +26,9 @@ public:
   template <typename Class>
   void registerReceiver(Class* pClass, void(const Class*, const Event& event));
 
-  void onBallPositionChanged();
-  void updateBallVector();
+  Ball& ball();
   void updateBallPosition();
   Point ballPosition() const;
-
-  void onBallLaunch(Point&& startPos, Point&& endPos);
 
   void resetScore();
   int score() const;
@@ -43,10 +40,8 @@ private:
   void emitEvent(Event&& event);
   std::vector<void(*)(const Event&)> mReceiverCallbacks;
 
-  Vector mBallVector;
-  PointSubject mBallPosition;
-  float mInternalBallPosX;
-  float mInternalBallPosY;
+  Ball mBall;
+
   int mScore = 0;
   enum State mState = State::Unstarted;
 };
