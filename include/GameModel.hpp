@@ -21,14 +21,8 @@ public:
     StateChanged,
   };
 
-  GameModel(Point&& ballStartPos);
-
   template <typename Class>
   void registerReceiver(Class* pClass, void(const Class*, const Event& event));
-
-  Ball& ball();
-  void updateBallPosition();
-  Point ballPosition() const;
 
   void resetScore();
   int score() const;
@@ -39,8 +33,6 @@ public:
 private:
   void emitEvent(Event&& event);
   std::vector<void(*)(const Event&)> mReceiverCallbacks;
-
-  Ball mBall;
 
   int mScore = 0;
   enum State mState = State::Unstarted;

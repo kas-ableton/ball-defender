@@ -11,20 +11,6 @@ namespace bd {
 
 struct Point;
 
-GameModel::GameModel(Point&& ballStartPos) : mBall(std::move(ballStartPos)) {}
-
-void GameModel::updateBallPosition() {
-  if (state() == State::BallInMotion) {
-    mBall.update();
-
-    if (mBall.position().y() == kPlayAreaY) {
-      setState(State::BallDead);
-    }
-  }
-}
-
-Ball& GameModel::ball() { return mBall; }
-
 void GameModel::setState(State newState) {
   mState = newState;
 

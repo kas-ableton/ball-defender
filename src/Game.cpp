@@ -8,8 +8,7 @@
 namespace bd {
 
 Game::Game(sf::RenderWindow* window)
-    : mGameModel({bd::kBallStartPosX, bd::kBallStartPosY}),
-      mGameView(window, &mGameModel, &mEntityManager),
+      : mGameView(window, &mGameModel, &mEntityManager),
       mEntityManager({bd::kBallStartPosX, bd::kBallStartPosY}, &mGameModel) {}
 
 void Game::handleEvent(const sf::Event& event) {
