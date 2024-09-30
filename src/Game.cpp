@@ -9,7 +9,8 @@ namespace bd {
 
 Game::Game(sf::RenderWindow* window)
     : mGameModel({bd::kBallStartPosX, bd::kBallStartPosY}),
-      mGameView(window, &mGameModel) {}
+      mGameView(window, &mGameModel, &mEntityManager),
+      mEntityManager({bd::kBallStartPosX, bd::kBallStartPosY}, &mGameModel) {}
 
 void Game::handleEvent(const sf::Event& event) {
   if (mGameModel.state() == bd::GameModel::State::Unstarted) {
@@ -21,8 +22,8 @@ void Game::handleEvent(const sf::Event& event) {
       mLaunchStart = {event.mouseButton.x, event.mouseButton.y};
     } else if (event.type == sf::Event::MouseButtonReleased) {
       // assert(mLaunchStart, "mLaunchStart invalid");
-      mGameModel.ball().onLaunch(std::move(mLaunchStart),
-                              {event.mouseButton.x, event.mouseButton.y});
+      mEntityManager.ball().onLaunch(
+          std::move(mLaunchStart), {event.mouseButton.x, event.mouseButton.y});
       mGameModel.setState(GameModel::State::BallInMotion);
     }
   } else if (mGameModel.state() == bd::GameModel::State::BallInMotion) {
@@ -31,7 +32,7 @@ void Game::handleEvent(const sf::Event& event) {
 }
 
 void Game::run() {
-  mGameModel.updateBallPosition();
+  mEntityManager.update();
   mGameView.draw();
 }
 

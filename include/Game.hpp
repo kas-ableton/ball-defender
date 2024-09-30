@@ -1,5 +1,6 @@
 #pragma once
 
+#include "EntityManager.hpp"
 #include "GameView.hpp"
 #include "GameModel.hpp"
 #include "Point.hpp"
@@ -27,6 +28,7 @@ public:
 private:
   GameModel mGameModel;
   GameView mGameView;
+  EntityManager mEntityManager;
 
   Point mLaunchStart;
 };

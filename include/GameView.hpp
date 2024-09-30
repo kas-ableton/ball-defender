@@ -13,10 +13,12 @@ class RenderWindow;
 
 namespace bd {
 class GameModel;
+class EntityManager;
 
 class GameView {
 public:
-  GameView(sf::RenderWindow* window, GameModel* gameModel);
+  GameView(sf::RenderWindow* window, GameModel* pGameModel,
+           EntityManager* pEntityManager);
 
   void addDrawObject(std::unique_ptr<sf::Drawable> object);
   void addBallToDrawObjects(int x, int y);
@@ -30,6 +32,7 @@ private:
   sf::RenderWindow* mpWindow;
 
   GameModel* mpGameModel;
+  EntityManager* mpEntityManager;
 
   std::vector<std::unique_ptr<sf::Drawable>> mDrawObjects;
 

@@ -1,5 +1,6 @@
 #include "GameView.hpp"
 #include "Constants.hpp"
+#include "EntityManager.hpp"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
@@ -8,8 +9,10 @@
 
 namespace bd {
 
-GameView::GameView(sf::RenderWindow* window, GameModel* gameModel)
-    : mpWindow(window), mpGameModel(gameModel) {}
+GameView::GameView(sf::RenderWindow* window, GameModel* pGameModel,
+                   EntityManager* pEntityManager)
+    : mpWindow(window), mpGameModel(pGameModel),
+      mpEntityManager(pEntityManager) {}
 
 void GameView::addDrawObject(std::unique_ptr<sf::Drawable> object) {
   mDrawObjects.emplace_back(std::move(object));
@@ -46,12 +49,12 @@ void GameView::draw() {
     // TODO draw start screen
     break;
   case GameModel::State::LaunchReady:
-    addBallToDrawObjects(mpGameModel->ball().position().x(),
-                         mpGameModel->ball().position().y());
+    addBallToDrawObjects(mpEntityManager->ball().position().x(),
+                         mpEntityManager->ball().position().y());
     break;
   case GameModel::State::BallInMotion:
-    addBallToDrawObjects(mpGameModel->ball().position().x(),
-                         mpGameModel->ball().position().y());
+    addBallToDrawObjects(mpEntityManager->ball().position().x(),
+                         mpEntityManager->ball().position().y());
     break;
   case GameModel::State::BallDead:
     break;
@@ -63,7 +66,6 @@ void GameView::draw() {
     mpWindow->draw(*obj);
   }
 }
-
 
 void GameView::reset() { mDrawObjects.clear(); }
 
