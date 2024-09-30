@@ -25,6 +25,8 @@ void GameModel::setState(State newState) {
   case State::BallDead:
     mScore += 1;
     break;
+  case State::GameOver:
+    break;
   }
 
   emitEvent(Event::StateChanged);

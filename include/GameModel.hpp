@@ -15,6 +15,7 @@ public:
     LaunchReady,
     BallInMotion,
     BallDead,
+    GameOver,
   };
 
   enum class Event {

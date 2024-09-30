@@ -25,8 +25,7 @@ void Game::handleEvent(const sf::Event& event) {
           std::move(mLaunchStart), {event.mouseButton.x, event.mouseButton.y});
       mGameModel.setState(GameModel::State::BallInMotion);
     }
-  } else if (mGameModel.state() == bd::GameModel::State::BallInMotion) {
-  } else if (mGameModel.state() == bd::GameModel::State::BallDead) {
+  } else if (mGameModel.state() == bd::GameModel::State::GameOver) {
   }
 }
 

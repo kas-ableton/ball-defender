@@ -48,6 +48,8 @@ void EntityManager::update() {
     break;
   case GameModel::State::BallDead:
     break;
+  case GameModel::State::GameOver:
+    break;
   }
 }
 
