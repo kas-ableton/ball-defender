@@ -11,6 +11,7 @@ class Ball
 public:
   Ball(Point&& ballStartPos);
   Point position() const;
+  Vector& vector();
   void onLaunch(Point&& startPos, Point&& endPos);
   void update();
   void resetLaunchPosition();
