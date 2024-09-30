@@ -6,6 +6,7 @@
 
 #include <memory>
 #include <optional>
+#include <variant>
 
 namespace bd {
 
@@ -20,17 +21,20 @@ public:
 
 private:
   struct CollisionEntity {
-    enum class Type {
-      wall,
-      block,
-      outOfBounds,
-    };
+  };
 
-    Type type;
+  struct WallCollisionEntity : public CollisionEntity {
+    WallCollisionEntity(Vector::Axis side)
+        : impactSide(side) {}
     Vector::Axis impactSide;
   };
 
-  std::optional<CollisionEntity> check(const EntityManager* const entityManager,
+  struct OutOfBoundsCollisionEntity : public CollisionEntity {};
+
+  using CollisionEntities =
+      std::variant<WallCollisionEntity, OutOfBoundsCollisionEntity>;
+
+  std::optional<CollisionEntities> check(const EntityManager* const entityManager,
                                        EntityType entity);
 
   Ball mBall;
