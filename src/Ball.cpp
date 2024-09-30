@@ -27,14 +27,6 @@ void Ball::update() {
 
   mPosition.setX(static_cast<int>(mInternalBallPosX));
   mPosition.setY(static_cast<int>(mInternalBallPosY));
-
-  if (mPosition.x() == kPlayAreaX || mPosition.x() == 0) {
-    mVector.reflect(Vector::Axis::Y);
-  }
-
-  if (mPosition.y() == 0) {
-    mVector.reflect(Vector::Axis::X);
-  }
 }
 
 void Ball::resetLaunchPosition() {

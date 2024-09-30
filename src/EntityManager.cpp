@@ -4,6 +4,24 @@
 
 namespace bd {
 
+auto EntityManager::check(const EntityManager* const entityManager,
+                          EntityType entity) -> std::optional<CollisionEntity> {
+  if (entity == EntityType::Ball) {
+    const auto ballPos = entityManager->mBall.position();
+
+    if (ballPos.y() == kPlayAreaY) {
+      return CollisionEntity{CollisionEntity::Type::outOfBounds,
+                             Vector::Axis::Y};
+    } else if (ballPos.x() == kPlayAreaX || ballPos.x() == 0) {
+      return CollisionEntity{CollisionEntity::Type::wall, Vector::Axis::X};
+    } else if (ballPos.y() == 0) {
+      return CollisionEntity{CollisionEntity::Type::wall, Vector::Axis::Y};
+    }
+  }
+
+  return {};
+}
+
 EntityManager::EntityManager(Point&& ballStartPos, GameModel* pModel)
     : mBall(std::move(ballStartPos)), mpGameModel(pModel) {}
 
@@ -17,9 +35,14 @@ void EntityManager::update() {
   case GameModel::State::BallInMotion:
     mBall.update();
 
-    // TODO move this logic to collision detector
-    if (mBall.position().y() == kPlayAreaY) {
-      mpGameModel->setState(GameModel::State::BallDead);
+    if (auto other = check(this, EntityType::Ball)) {
+      if (other->type == CollisionEntity::Type::outOfBounds) {
+        mpGameModel->setState(GameModel::State::BallDead);
+      } else if (other->type == CollisionEntity::Type::wall) {
+        mBall.vector().reflect(other->impactSide == Vector::Axis::X
+                                   ? Vector::Axis::Y
+                                   : Vector::Axis::X);
+      }
     }
 
     break;
