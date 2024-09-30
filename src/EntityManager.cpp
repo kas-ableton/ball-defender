@@ -64,4 +64,6 @@ void EntityManager::update() {
 
 Ball& EntityManager::ball() { return mBall; }
 
+const BlockManager& EntityManager::blockManager() { return mBlockManager; }
+
 } // namespace bd

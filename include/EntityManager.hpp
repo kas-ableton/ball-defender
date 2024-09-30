@@ -17,7 +17,8 @@ public:
   void update();
 
   Ball& ball();
-  Point ballPosition() const;
+
+  const BlockManager& blockManager();
 
 private:
   struct CollisionEntity {
