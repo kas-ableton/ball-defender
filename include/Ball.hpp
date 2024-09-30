@@ -12,7 +12,7 @@ public:
   Vector& vector();
   void onLaunch(Point&& startPos, Point&& endPos);
   void update();
-  void resetLaunchPosition();
+  void reset();
 
 private:
   Vector mVector;

@@ -2,8 +2,8 @@
 
 
 namespace bd {
-constexpr unsigned int kWindowSizeX = 1080;
-constexpr unsigned int kWindowSizeY = 1080;
+constexpr unsigned int kWindowSizeX = 880;
+constexpr unsigned int kWindowSizeY = 880;
 
 constexpr unsigned int kWindowPadding = 20;
 
@@ -15,4 +15,7 @@ constexpr int kBallStartPosX = kWindowPadding + kPlayAreaX / 2;
 constexpr int kBallStartPosY = kPlayAreaY;
 
 constexpr float kVelocity = 10.0f;
+
+constexpr int kBlockSizeX = 30;
+constexpr int kBlockSizeY = 30;
 } // namespace bd

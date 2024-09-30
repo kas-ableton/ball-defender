@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Ball.hpp"
+#include "BlockManager.hpp"
 #include "Entity.hpp"
 #include "GameModel.hpp"
 
@@ -18,27 +19,35 @@ public:
 
   Ball& ball();
 
-  const BlockManager& blockManager();
+  const BlockManager& blockManager() const;
+  BlockManager& blockManager();
 
 private:
-  struct CollisionEntity {
-  };
+  struct CollisionEntity {};
 
   struct WallCollisionEntity : public CollisionEntity {
-    WallCollisionEntity(Vector::Axis side)
-        : impactSide(side) {}
+    WallCollisionEntity(Vector::Axis side) : impactSide(side) {}
     Vector::Axis impactSide;
   };
 
   struct OutOfBoundsCollisionEntity : public CollisionEntity {};
 
-  using CollisionEntities =
-      std::variant<WallCollisionEntity, OutOfBoundsCollisionEntity>;
+  struct BlockCollisionEntity : public CollisionEntity {
+    BlockCollisionEntity(Block* pBlock, Vector::Axis side)
+        : block(pBlock), impactSide(side) {}
+    Block* block;
+    Vector::Axis impactSide;
+  };
 
-  std::optional<CollisionEntities> check(const EntityManager* const entityManager,
-                                       EntityType entity);
+  using CollisionEntities =
+      std::variant<WallCollisionEntity, OutOfBoundsCollisionEntity,
+                   BlockCollisionEntity>;
+
+  std::optional<CollisionEntities>
+  check(const EntityManager* const entityManager, EntityType entity);
 
   Ball mBall;
+  BlockManager mBlockManager;
 
   GameModel* mpGameModel;
 };

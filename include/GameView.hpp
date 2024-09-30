@@ -23,6 +23,7 @@ public:
   void addDrawObject(std::unique_ptr<sf::Drawable> object);
   void addBallToDrawObjects(int x, int y);
   void addPlayAreaToDrawObjects();
+  void addBlocksToDrawObjects();
 
   void draw();
 

@@ -29,7 +29,7 @@ void Ball::update() {
   mPosition.setY(static_cast<int>(mInternalBallPosY));
 }
 
-void Ball::resetLaunchPosition() {
+void Ball::reset() {
   mVector.reset();
   mPosition = mLaunchPosition;
   mInternalBallPosX = mPosition.x();
