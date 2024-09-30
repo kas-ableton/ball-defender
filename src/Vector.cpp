@@ -24,4 +24,9 @@ void Vector::reflect(const Axis axis) {
     yDelta *= -1;
   }
 }
+
+void Vector::reset() {
+  xDelta = std::numeric_limits<float>::min();
+  yDelta = std::numeric_limits<float>::min();
+}
 } // namespace bd

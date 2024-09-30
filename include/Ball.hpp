@@ -13,8 +13,10 @@ public:
   Point position() const;
   void onLaunch(Point&& startPos, Point&& endPos);
   void update();
+  void resetLaunchPosition();
 private:
   Vector mVector;
+  Point mLaunchPosition;
   Point mPosition;
   float mInternalBallPosX;
   float mInternalBallPosY;

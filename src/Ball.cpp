@@ -7,9 +7,8 @@
 
 namespace bd {
 Ball::Ball(Point&& ballStartPos)
-    : mPosition(std::move(ballStartPos)),
-      mInternalBallPosX(mPosition.x()),
-      mInternalBallPosY(mPosition.y()) {}
+    : mLaunchPosition(std::move(ballStartPos)), mPosition(mLaunchPosition),
+      mInternalBallPosX(mPosition.x()), mInternalBallPosY(mPosition.y()) {}
 
 Point Ball::position() const { return mPosition; }
 
@@ -27,26 +26,6 @@ void Ball::update() {
   mPosition.setX(static_cast<int>(mInternalBallPosX));
   mPosition.setY(static_cast<int>(mInternalBallPosY));
 
-  // if (auto other = CollisionDetector.check(EntityId::Ball))
-  // {
-  //    if (other == powerUp)
-  //    {
-  //        increase velocity
-  //    }
-  //    else if (other == outOfbounds)
-  //    {
-  //        reset position+internal to null
-  //    }
-  //    else if (other.impactSide == Vector::Axis::X)
-  //    {
-  //        mVector.reflect(Vector::Axis::Y);
-  //    }
-  //    else if (other.impactSide == Vector::Axis::Y)
-  //    {
-  //        mVector.reflect(Vector::Axis::X);
-  //    }
-  // }
-
   if (mPosition.x() == kPlayAreaX || mPosition.x() == 0) {
     mVector.reflect(Vector::Axis::Y);
   }
@@ -54,6 +33,13 @@ void Ball::update() {
   if (mPosition.y() == 0) {
     mVector.reflect(Vector::Axis::X);
   }
+}
+
+void Ball::resetLaunchPosition() {
+  mVector.reset();
+  mPosition = mLaunchPosition;
+  mInternalBallPosX = mPosition.x();
+  mInternalBallPosY = mPosition.y();
 }
 
 } // namespace bd

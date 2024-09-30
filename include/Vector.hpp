@@ -15,6 +15,7 @@ public:
   Vector(Point&& startPos, Point&& endPos);
 
   void reflect(const Axis axis);
+  void reset();
 
   float xDelta = std::numeric_limits<float>::min();
   float yDelta = std::numeric_limits<float>::min();
