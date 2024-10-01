@@ -3,17 +3,17 @@
 #include "Ball.hpp"
 #include "BlockManager.hpp"
 #include "Entity.hpp"
-#include "GameModel.hpp"
 
 #include <memory>
 #include <optional>
 #include <variant>
 
 namespace bd {
+class Game;
 
 class EntityManager {
 public:
-  EntityManager(Point&& ballStartPos, GameModel* pModel);
+  EntityManager(Point&& ballStartPos, Game* pGame);
 
   void update();
 
@@ -51,7 +51,7 @@ private:
   Ball mBall;
   BlockManager mBlockManager;
 
-  GameModel* mpGameModel;
+  Game* mpGame;
 };
 
 } // namespace bd

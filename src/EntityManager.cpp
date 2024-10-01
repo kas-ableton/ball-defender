@@ -1,6 +1,7 @@
 #include "EntityManager.hpp"
 
 #include "Constants.hpp"
+#include "Game.hpp"
 
 #include <variant>
 
@@ -9,10 +10,9 @@ namespace bd {
 template <class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
 template <class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
-EntityManager::EntityManager(Point&& ballStartPos, GameModel* pModel)
+EntityManager::EntityManager(Point&& ballStartPos, Game* pGame)
     : mBall(std::move(ballStartPos)),
-      mBlockManager(kPlayAreaY - kBlockSizeY, kBlockSizeY),
-      mpGameModel(pModel) {}
+      mBlockManager(kPlayAreaY - kBlockSizeY, kBlockSizeY), mpGame(pGame) {}
 
 auto EntityManager::check(const EntityManager* const entityManager,
                           EntityType entity)
@@ -39,17 +39,17 @@ auto EntityManager::check(const EntityManager* const entityManager,
 }
 
 void EntityManager::update() {
-  switch (mpGameModel->state()) {
-  case GameModel::State::Unstarted:
+  switch (mpGame->state()) {
+  case Game::State::Unstarted:
     break;
-  case GameModel::State::LaunchReady:
+  case Game::State::LaunchReady:
     break;
-  case GameModel::State::BallInMotion:
+  case Game::State::BallInMotion:
     mBall.update();
 
     if (auto other = check(this, EntityType::Ball)) {
       std::visit(overloaded{[this](const OutOfBoundsCollisionEntity&) {
-                              mpGameModel->setState(GameModel::State::BallDead);
+                              mpGame->setState(Game::State::BallDead);
                             },
                             [this](const WallCollisionEntity& wall) {
                               mBall.vector().reflect(wall.impactSide ==
@@ -68,17 +68,17 @@ void EntityManager::update() {
     }
 
     break;
-  case GameModel::State::BallDead:
+  case Game::State::BallDead:
     if (mBlockManager.atBlockRowMax()) {
-      mpGameModel->setState(GameModel::State::GameOver);
+      mpGame->setState(Game::State::GameOver);
     } else {
       mBlockManager.advanceBlockRows();
       mBlockManager.addBlockRow();
       mBall.reset();
-      mpGameModel->setState(GameModel::State::LaunchReady);
+      mpGame->setState(Game::State::LaunchReady);
     }
     break;
-  case GameModel::State::GameOver:
+  case Game::State::GameOver:
     break;
   }
 }

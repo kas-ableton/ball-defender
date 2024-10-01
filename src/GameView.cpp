@@ -1,6 +1,8 @@
 #include "GameView.hpp"
+
 #include "Constants.hpp"
 #include "EntityManager.hpp"
+#include "Game.hpp"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
@@ -9,10 +11,9 @@
 
 namespace bd {
 
-GameView::GameView(sf::RenderWindow* window, GameModel* pGameModel,
+GameView::GameView(sf::RenderWindow* window, Game* pGame,
                    EntityManager* pEntityManager)
-    : mpWindow(window), mpGameModel(pGameModel),
-      mpEntityManager(pEntityManager) {}
+    : mpWindow(window), mpGame(pGame), mpEntityManager(pEntityManager) {}
 
 void GameView::addDrawObject(std::unique_ptr<sf::Drawable> object) {
   mDrawObjects.emplace_back(std::move(object));
@@ -30,15 +31,15 @@ void GameView::addPlayAreaToDrawObjects() {
 
 void GameView::addBlocksToDrawObjects() {
   for (const auto& blockRow : mpEntityManager->blockManager().blocks()) {
-      for (const auto& [_, block] : blockRow.blocks()) {
-    auto pBlock = std::make_unique<sf::RectangleShape>(
-        sf::Vector2f(bd::kBlockSizeX, bd::kBlockSizeY));
+    for (const auto& [_, block] : blockRow.blocks()) {
+      auto pBlock = std::make_unique<sf::RectangleShape>(
+          sf::Vector2f(bd::kBlockSizeX, bd::kBlockSizeY));
 
-    pBlock->setFillColor(sf::Color(250, 250, 250));
-    pBlock->setPosition(block.position().x(), block.position().y());
+      pBlock->setFillColor(sf::Color(250, 250, 250));
+      pBlock->setPosition(block.position().x(), block.position().y());
 
-    addDrawObject(std::move(pBlock));
-      }
+      addDrawObject(std::move(pBlock));
+    }
   }
 }
 
@@ -54,25 +55,25 @@ void GameView::addBallToDrawObjects(int x, int y) {
 void GameView::draw() {
   reset();
 
-  if (mpGameModel->state() != bd::GameModel::State::Unstarted) {
+  if (mpGame->state() != bd::Game::State::Unstarted) {
     addPlayAreaToDrawObjects();
   }
 
-  switch (mpGameModel->state()) {
-  case GameModel::State::Unstarted:
+  switch (mpGame->state()) {
+  case Game::State::Unstarted:
     // TODO draw start screen
     break;
-  case GameModel::State::LaunchReady:
+  case Game::State::LaunchReady:
     addBallToDrawObjects(mpEntityManager->ball().position().x(),
                          mpEntityManager->ball().position().y());
     addBlocksToDrawObjects();
     break;
-  case GameModel::State::BallInMotion:
+  case Game::State::BallInMotion:
     addBallToDrawObjects(mpEntityManager->ball().position().x(),
                          mpEntityManager->ball().position().y());
     addBlocksToDrawObjects();
     break;
-  case GameModel::State::BallDead:
+  case Game::State::BallDead:
     addBlocksToDrawObjects();
     break;
   default:

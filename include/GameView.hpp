@@ -1,7 +1,5 @@
 #pragma once
 
-#include "GameModel.hpp"
-
 #include <SFML/Graphics.hpp>
 
 #include <vector>
@@ -12,12 +10,12 @@ class RenderWindow;
 } // namespace sf
 
 namespace bd {
-class GameModel;
+class Game;
 class EntityManager;
 
 class GameView {
 public:
-  GameView(sf::RenderWindow* window, GameModel* pGameModel,
+  GameView(sf::RenderWindow* window, Game* pGame,
            EntityManager* pEntityManager);
 
   void addDrawObject(std::unique_ptr<sf::Drawable> object);
@@ -32,7 +30,7 @@ private:
 
   sf::RenderWindow* mpWindow;
 
-  GameModel* mpGameModel;
+  Game* mpGame;
   EntityManager* mpEntityManager;
 
   std::vector<std::unique_ptr<sf::Drawable>> mDrawObjects;

@@ -8,24 +8,28 @@
 namespace bd {
 
 Game::Game(sf::RenderWindow* window)
-      : mGameView(window, &mGameModel, &mEntityManager),
-      mEntityManager({bd::kBallStartPosX, bd::kBallStartPosY}, &mGameModel) {}
+    : mGameView(window, this, &mEntityManager),
+      mEntityManager({bd::kBallStartPosX, bd::kBallStartPosY}, this) {}
+
+void Game::setState(State newState) { mState = newState; }
+
+auto Game::state() const -> State { return mState; }
 
 void Game::handleEvent(const sf::Event& event) {
-  if (mGameModel.state() == bd::GameModel::State::Unstarted) {
+  if (state() == State::Unstarted) {
     if (event.type == sf::Event::MouseButtonReleased) {
       start();
     }
-  } else if (mGameModel.state() == bd::GameModel::State::LaunchReady) {
+  } else if (state() == State::LaunchReady) {
     if (event.type == sf::Event::MouseButtonPressed) {
       mLaunchStart = {event.mouseButton.x, event.mouseButton.y};
     } else if (event.type == sf::Event::MouseButtonReleased) {
       // assert(mLaunchStart, "mLaunchStart invalid");
       mEntityManager.ball().onLaunch(
           std::move(mLaunchStart), {event.mouseButton.x, event.mouseButton.y});
-      mGameModel.setState(GameModel::State::BallInMotion);
+      setState(State::BallInMotion);
     }
-  } else if (mGameModel.state() == bd::GameModel::State::GameOver) {
+  } else if (state() == State::GameOver) {
   }
 }
 
@@ -35,7 +39,7 @@ void Game::run() {
 }
 
 void Game::start() {
-  mGameModel.setState(GameModel::State::LaunchReady);
+  setState(State::LaunchReady);
 
   mEntityManager.blockManager().addBlockRow();
 }

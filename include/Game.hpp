@@ -2,7 +2,6 @@
 
 #include "EntityManager.hpp"
 #include "GameView.hpp"
-#include "GameModel.hpp"
 #include "Point.hpp"
 
 #include <memory>
@@ -17,7 +16,18 @@ class RenderWindow;
 namespace bd {
 class Game {
 public:
+  enum class State {
+    Unstarted,
+    LaunchReady,
+    BallInMotion,
+    BallDead,
+    GameOver,
+  };
+
   Game(sf::RenderWindow* window);
+
+  void setState(State newState);
+  State state() const;
 
   void handleEvent(const sf::Event& event);
 
@@ -26,7 +36,8 @@ public:
   void start();
 
 private:
-  GameModel mGameModel;
+  enum State mState = State::Unstarted;
+
   GameView mGameView;
   EntityManager mEntityManager;
 
