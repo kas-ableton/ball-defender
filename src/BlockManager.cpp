@@ -48,12 +48,11 @@ BlockManager::BlockManager(unsigned int max, int blockSize)
 void BlockManager::addBlockRow() {
   const auto startPos = static_cast<int>(kWindowPadding);
   const auto prevRange =
-      mBlockRows.empty() ? std::tuple{0, 0}
-                         : mBlockRows.back().range();
+      mBlockRows.empty() ? std::tuple{0, 0} : mBlockRows.back().range();
 
   auto newRow =
       BlockRow(std::make_tuple(std::get<1>(prevRange) + mBlockSize,
-                               std::get<1>(prevRange) + 2*mBlockSize));
+                               std::get<1>(prevRange) + 2 * mBlockSize));
 
   // TODO
   // generate blocks
@@ -66,7 +65,7 @@ void BlockManager::addBlockRow() {
   newRow.addBlock({hitCount, std::move(position)});
 
   mBlockRows.emplace_back(std::move(newRow));
-  rowDepth++;
+  mRowDepth++;
 }
 
 void BlockManager::advanceBlockRows() {
@@ -76,6 +75,8 @@ void BlockManager::advanceBlockRows() {
     }
   }
 }
+
+unsigned int BlockManager::rowDepth() const { return mRowDepth; }
 
 bool BlockManager::atBlockRowMax() const {
   return static_cast<unsigned int>(

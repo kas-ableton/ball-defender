@@ -22,6 +22,8 @@ public:
   const BlockManager& blockManager() const;
   BlockManager& blockManager();
 
+  unsigned int score() const;
+
 private:
   struct CollisionEntity {};
 

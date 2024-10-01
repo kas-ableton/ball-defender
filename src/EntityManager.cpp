@@ -85,8 +85,11 @@ void EntityManager::update() {
 
 Ball& EntityManager::ball() { return mBall; }
 
-const BlockManager& EntityManager::blockManager() const { return mBlockManager; }
+const BlockManager& EntityManager::blockManager() const {
+  return mBlockManager;
+}
 
 BlockManager& EntityManager::blockManager() { return mBlockManager; }
 
+unsigned int EntityManager::score() const { return mBlockManager.rowDepth(); }
 } // namespace bd

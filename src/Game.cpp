@@ -38,8 +38,6 @@ void Game::start() {
   mGameModel.setState(GameModel::State::LaunchReady);
 
   mEntityManager.blockManager().addBlockRow();
-
-  mGameModel.resetScore();
 }
 
 } // namespace bd

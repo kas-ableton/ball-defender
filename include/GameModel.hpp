@@ -25,9 +25,6 @@ public:
   template <typename Class>
   void registerReceiver(Class* pClass, void(const Class*, const Event& event));
 
-  void resetScore();
-  int score() const;
-
   void setState(State newState);
   State state() const;
 
@@ -35,7 +32,6 @@ private:
   void emitEvent(Event&& event);
   std::vector<void(*)(const Event&)> mReceiverCallbacks;
 
-  int mScore = 0;
   enum State mState = State::Unstarted;
 };
 

@@ -50,6 +50,8 @@ public:
 
   void advanceBlockRows();
 
+  unsigned int rowDepth() const;
+
   bool atBlockRowMax() const;
 
   const std::vector<BlockRow>& blocks() const;
@@ -59,7 +61,8 @@ public:
 private:
   std::vector<BlockRow> mBlockRows;
   std::vector<Block> mBlocks;
-  unsigned int rowDepth = 0;
+  // how many rows have been added so far
+  unsigned int mRowDepth = 0;
   unsigned int mMax;
   int mBlockSize;
 };
