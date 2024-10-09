@@ -25,11 +25,11 @@ int main() {
 
       gameInstance.handleEvent(event);
     }
-    window->clear();
+    window.clear();
 
     gameInstance.run();
 
-    window->display();
+    window.display();
   }
 
   return 0;

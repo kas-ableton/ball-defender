@@ -1,5 +1,8 @@
 #include "GameView.hpp"
+
 #include "Constants.hpp"
+#include "EntityManager.hpp"
+#include "Game.hpp"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
@@ -8,67 +11,78 @@
 
 namespace bd {
 
-GameView::GameView(sf::RenderWindow* window, GameModel* gameModel)
-    : mpWindow(window), mpGameModel(gameModel) {}
+GameView::GameView(sf::RenderWindow* window, Game* pGame,
+                   EntityManager* pEntityManager)
+    : mpWindow(window), mpGame(pGame), mpEntityManager(pEntityManager) {}
 
-void GameView::addDrawObject(sf::Drawable* object) {
-  mDrawObjects.push_back(object);
+void GameView::addDrawObject(std::unique_ptr<sf::Drawable> object) {
+  mDrawObjects.emplace_back(std::move(object));
+}
+
+void GameView::addPlayAreaToDrawObjects() {
+  auto pPlayArea = std::make_unique<sf::RectangleShape>(
+      sf::Vector2f(bd::kPlayAreaX, bd::kPlayAreaY));
+
+  pPlayArea->setFillColor(sf::Color(100, 250, 50));
+  pPlayArea->setPosition(bd::kWindowPadding, bd::kWindowPadding);
+
+  addDrawObject(std::move(pPlayArea));
+}
+
+void GameView::addBlocksToDrawObjects() {
+  for (const auto& blockRow : mpEntityManager->blockManager().blocks()) {
+    for (const auto& [_, block] : blockRow.blocks()) {
+      auto pBlock = std::make_unique<sf::RectangleShape>(
+          sf::Vector2f(bd::kBlockSizeX, bd::kBlockSizeY));
+
+      pBlock->setFillColor(sf::Color(250, 250, 250));
+      pBlock->setPosition(block.position().x(), block.position().y());
+
+      addDrawObject(std::move(pBlock));
+    }
+  }
+}
+
+void GameView::addBallToDrawObjects(int x, int y) {
+  auto pBall = std::make_unique<sf::CircleShape>(kBallRadius);
+
+  pBall->setFillColor(sf::Color(250, 250, 250));
+  pBall->setPosition(x, y);
+
+  addDrawObject(std::move(pBall));
 }
 
 void GameView::draw() {
-  // Temporary solution until observer pattern set up
-  if (mpGameModel->state() == bd::GameModel::State::BallInMotion) {
-    mpBall->setPosition(mpGameModel->ballPosition().x(),
-                        mpGameModel->ballPosition().y());
+  reset();
+
+  if (mpGame->state() != bd::Game::State::Unstarted) {
+    addPlayAreaToDrawObjects();
   }
 
-  std::cout << mpGameModel->ballPosition().x() << ',';
-  std::cout << mpGameModel->ballPosition().y() << '\n';
-
-  mpWindow->clear();
-
-  for (const auto& obj : mDrawObjects) {
-    mpWindow->draw(*obj);
-  }
-
-  mpWindow->display();
-}
-
-void GameView::handleState() {
-  switch (mpGameModel->state()) {
-  case GameModel::State::Unstarted:
-    reset();
+  switch (mpGame->state()) {
+  case Game::State::Unstarted:
+    // TODO draw start screen
     break;
-  case GameModel::State::LaunchReady:
-    launchReadyState();
+  case Game::State::LaunchReady:
+    addBallToDrawObjects(mpEntityManager->ball().position().x(),
+                         mpEntityManager->ball().position().y());
+    addBlocksToDrawObjects();
     break;
-  case GameModel::State::BallInMotion:
-    // add observer to GameModel::ballPosition()
+  case Game::State::BallInMotion:
+    addBallToDrawObjects(mpEntityManager->ball().position().x(),
+                         mpEntityManager->ball().position().y());
+    addBlocksToDrawObjects();
     break;
-  case GameModel::State::BallDead:
+  case Game::State::BallDead:
+    addBlocksToDrawObjects();
     break;
   default:
     break;
   }
-}
 
-void GameView::launchReadyState() {
-  reset();
-
-  mpPlayArea = std::make_unique<sf::RectangleShape>(
-      sf::Vector2f(bd::kPlayAreaX, bd::kPlayAreaY));
-  mpPlayArea->setFillColor(sf::Color(100, 250, 50));
-  mpPlayArea->setPosition(bd::kWindowPadding, bd::kWindowPadding);
-
-  addDrawObject(mpPlayArea.get());
-
-  // TODO draw blocks
-
-  mpBall = std::make_unique<sf::CircleShape>(kBallRadius);
-  mpBall->setFillColor(sf::Color(250, 250, 250));
-  mpBall->setPosition(bd::kBallStartPosX, bd::kBallStartPosY);
-
-  addDrawObject(mpBall.get());
+  for (const auto& obj : mDrawObjects) {
+    mpWindow->draw(*obj);
+  }
 }
 
 void GameView::reset() { mDrawObjects.clear(); }
