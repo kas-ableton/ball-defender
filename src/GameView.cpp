@@ -8,12 +8,16 @@
 #include <SFML/Window.hpp>
 
 #include <iostream>
+#include <string>
 
 namespace bd {
 
 GameView::GameView(sf::RenderWindow* window, Game* pGame,
-                   EntityManager* pEntityManager)
-    : mpWindow(window), mpGame(pGame), mpEntityManager(pEntityManager) {}
+                   EntityManager* pEntityManager,
+                   const std::filesystem::path& fontFilePath)
+    : mpWindow(window), mpGame(pGame), mpEntityManager(pEntityManager) {
+  mFont.loadFromFile(fontFilePath);
+}
 
 void GameView::addDrawObject(std::unique_ptr<sf::Drawable> object) {
   mDrawObjects.emplace_back(std::move(object));
@@ -52,11 +56,28 @@ void GameView::addBallToDrawObjects(int x, int y) {
   addDrawObject(std::move(pBall));
 }
 
+void GameView::addScoreToDrawObjects(unsigned int score) {
+  auto pScoreText = std::make_unique<sf::Text>();
+
+  static const unsigned int characterSize = 50;
+
+  pScoreText->setFont(mFont);
+  pScoreText->setString(std::to_string(score));
+  pScoreText->setCharacterSize(characterSize);
+  pScoreText->setFillColor(sf::Color(100, 250, 50));
+  pScoreText->setPosition(bd::kPlayAreaX + (2 * bd::kWindowPadding),
+                         bd::kWindowPadding);
+  pScoreText->setStyle(sf::Text::Bold | sf::Text::Underlined);
+
+  addDrawObject(std::move(pScoreText));
+}
+
 void GameView::draw() {
   reset();
 
   if (mpGame->state() != bd::Game::State::Unstarted) {
     addPlayAreaToDrawObjects();
+    addScoreToDrawObjects(mpGame->score());
   }
 
   switch (mpGame->state()) {
