@@ -14,11 +14,10 @@ EntityManager::EntityManager(Point&& ballStartPos, Game* pGame)
     : mBall(std::move(ballStartPos)),
       mBlockManager(kPlayAreaY - kBlockSizeY, kBlockSizeY), mpGame(pGame) {}
 
-auto EntityManager::check(const EntityManager* const entityManager,
-                          EntityType entity)
+auto EntityManager::check(EntityType entity)
     -> std::optional<CollisionEntities> {
   if (entity == EntityType::Ball) {
-    const auto ballPos = entityManager->mBall.position();
+    const auto ballPos = mBall.position();
 
     if (ballPos.y() == kPlayAreaY) {
       return OutOfBoundsCollisionEntity{};
@@ -47,7 +46,7 @@ void EntityManager::update() {
   case Game::State::BallInMotion:
     mBall.update();
 
-    if (auto other = check(this, EntityType::Ball)) {
+    if (auto other = check(EntityType::Ball)) {
       std::visit(overloaded{[this](const OutOfBoundsCollisionEntity&) {
                               mpGame->setState(Game::State::BallDead);
                             },

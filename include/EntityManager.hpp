@@ -45,8 +45,7 @@ private:
       std::variant<WallCollisionEntity, OutOfBoundsCollisionEntity,
                    BlockCollisionEntity>;
 
-  std::optional<CollisionEntities>
-  check(const EntityManager* const entityManager, EntityType entity);
+  std::optional<CollisionEntities> check(EntityType entity);
 
   Ball mBall;
   BlockManager mBlockManager;

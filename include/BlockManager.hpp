@@ -60,7 +60,6 @@ public:
 
 private:
   std::vector<BlockRow> mBlockRows;
-  std::vector<Block> mBlocks;
   // how many rows have been added so far
   unsigned int mRowDepth = 0;
   unsigned int mMax;
