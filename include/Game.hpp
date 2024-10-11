@@ -35,6 +35,8 @@ public:
 
   void start();
 
+  unsigned int score() const;
+
 private:
   enum State mState = State::Unstarted;
 

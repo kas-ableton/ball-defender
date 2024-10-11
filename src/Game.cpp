@@ -44,4 +44,8 @@ void Game::start() {
   mEntityManager.blockManager().addBlockRow();
 }
 
+unsigned int Game::score() const {
+  return mEntityManager.score();
+}
+
 } // namespace bd
