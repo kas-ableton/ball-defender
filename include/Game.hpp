@@ -12,7 +12,6 @@ class Event;
 class RenderWindow;
 } // namespace sf
 
-
 namespace bd {
 class Game {
 public:
@@ -24,7 +23,7 @@ public:
     GameOver,
   };
 
-  Game(sf::RenderWindow* window);
+  Game(sf::RenderWindow* window, const std::filesystem::path& resourcesPath);
 
   void setState(State newState);
   State state() const;

@@ -9,11 +9,10 @@
 
 namespace bd {
 
-const std::string kFontFile = "../resources/Courier New Bold.ttf";
 
-Game::Game(sf::RenderWindow* window)
-    : mGameView(window, this, &mEntityManager, std::filesystem::path{kFontFile}),
-      mEntityManager({bd::kBallStartPosX, bd::kBallStartPosY}, this) { }
+Game::Game(sf::RenderWindow* window, const std::filesystem::path& resourcesPath)
+    : mGameView(window, this, &mEntityManager, resourcesPath),
+      mEntityManager({bd::kBallStartPosX, bd::kBallStartPosY}, this) {}
 
 void Game::setState(State newState) { mState = newState; }
 

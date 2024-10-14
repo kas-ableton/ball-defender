@@ -14,11 +14,13 @@ namespace bd {
 class Game;
 class EntityManager;
 
+const std::string kFontFile = "Courier New Bold.ttf";
+
 class GameView {
 public:
   GameView(sf::RenderWindow* window, Game* pGame,
            EntityManager* pEntityManager,
-           const std::filesystem::path& fontFilePath);
+           const std::filesystem::path& resourcesPath);
 
   void addDrawObject(std::unique_ptr<sf::Drawable> object);
   void addBallToDrawObjects(int x, int y);

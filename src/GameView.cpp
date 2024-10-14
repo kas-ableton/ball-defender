@@ -14,9 +14,9 @@ namespace bd {
 
 GameView::GameView(sf::RenderWindow* window, Game* pGame,
                    EntityManager* pEntityManager,
-                   const std::filesystem::path& fontFilePath)
+                   const std::filesystem::path& resourcesPath)
     : mpWindow(window), mpGame(pGame), mpEntityManager(pEntityManager) {
-  mFont.loadFromFile(fontFilePath);
+  mFont.loadFromFile(resourcesPath / kFontFile);
 }
 
 void GameView::addDrawObject(std::unique_ptr<sf::Drawable> object) {
@@ -67,7 +67,6 @@ void GameView::addScoreToDrawObjects(unsigned int score) {
   pScoreText->setFillColor(sf::Color(100, 250, 50));
   pScoreText->setPosition(bd::kPlayAreaX + (2 * bd::kWindowPadding),
                          bd::kWindowPadding);
-  pScoreText->setStyle(sf::Text::Bold | sf::Text::Underlined);
 
   addDrawObject(std::move(pScoreText));
 }
