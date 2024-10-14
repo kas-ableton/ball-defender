@@ -83,6 +83,18 @@ void GameView::addGameOverTextToDrawObjects() {
   addDrawObject(std::move(pGameOverText));
 }
 
+void GameView::addStartScreenToDrawObjects() {
+  auto pStartText = std::make_unique<sf::Text>();
+
+  pStartText->setFont(mFont);
+  pStartText->setString("Click anywhere to start");
+  pStartText->setCharacterSize(30);
+  pStartText->setPosition(bd::kWindowSizeX - bd::kPlayAreaX,
+                         bd::kWindowSizeY / 2);
+
+  addDrawObject(std::move(pStartText));
+}
+
 void GameView::draw() {
   reset();
 
@@ -93,7 +105,7 @@ void GameView::draw() {
 
   switch (mpGame->state()) {
   case Game::State::Unstarted:
-    // TODO draw start screen
+    addStartScreenToDrawObjects();
     break;
   case Game::State::LaunchReady:
     addBallToDrawObjects(mpEntityManager->ball().position().x(),

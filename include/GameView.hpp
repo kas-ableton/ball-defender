@@ -28,6 +28,7 @@ public:
   void addBlocksToDrawObjects();
   void addScoreToDrawObjects(unsigned int score);
   void addGameOverTextToDrawObjects();
+  void addStartScreenToDrawObjects();
 
   void draw();
 
