@@ -72,6 +72,18 @@ void GameView::addScoreToDrawObjects(unsigned int score) {
   addDrawObject(std::move(pScoreText));
 }
 
+void GameView::addGameOverTextToDrawObjects() {
+  auto pGameOverText = std::make_unique<sf::Text>();
+
+  pGameOverText->setFont(mFont);
+  pGameOverText->setString("Game over!");
+  pGameOverText->setCharacterSize(50);
+  pGameOverText->setPosition(bd::kWindowSizeX / 2,
+                         bd::kWindowSizeY / 2);
+
+  addDrawObject(std::move(pGameOverText));
+}
+
 void GameView::draw() {
   reset();
 
@@ -96,6 +108,10 @@ void GameView::draw() {
     break;
   case Game::State::BallDead:
     addBlocksToDrawObjects();
+    break;
+  case Game::State::GameOver:
+    addBlocksToDrawObjects();
+    addGameOverTextToDrawObjects();
     break;
   default:
     break;

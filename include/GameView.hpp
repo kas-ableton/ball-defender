@@ -25,6 +25,7 @@ public:
   void addPlayAreaToDrawObjects();
   void addBlocksToDrawObjects();
   void addScoreToDrawObjects(unsigned int score);
+  void addGameOverTextToDrawObjects();
 
   void draw();
 
