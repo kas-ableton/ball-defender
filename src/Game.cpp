@@ -21,7 +21,7 @@ auto Game::state() const -> State { return mState; }
 void Game::handleEvent(const sf::Event& event) {
   if (state() == State::Unstarted) {
     if (event.type == sf::Event::MouseButtonReleased) {
-      start();
+      setState(State::StartNewRound);
     }
   } else if (state() == State::LaunchReady) {
     if (event.type == sf::Event::MouseButtonPressed) {
@@ -33,18 +33,13 @@ void Game::handleEvent(const sf::Event& event) {
       setState(State::BallInMotion);
     }
   } else if (state() == State::GameOver) {
+      setState(State::Unstarted);
   }
 }
 
 void Game::run() {
   mEntityManager.update();
   mGameView.draw();
-}
-
-void Game::start() {
-  setState(State::LaunchReady);
-
-  mEntityManager.blockManager().addBlockRow();
 }
 
 unsigned int Game::score() const {

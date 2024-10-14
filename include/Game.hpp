@@ -17,6 +17,7 @@ class Game {
 public:
   enum class State {
     Unstarted,
+    StartNewRound,
     LaunchReady,
     BallInMotion,
     BallDead,
@@ -31,8 +32,6 @@ public:
   void handleEvent(const sf::Event& event);
 
   void run();
-
-  void start();
 
   unsigned int score() const;
 

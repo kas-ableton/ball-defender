@@ -8,7 +8,7 @@
 namespace bd {
 
 template <class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
-template <class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
+template <class... Ts> overloaded(Ts...)->overloaded<Ts...>;
 
 EntityManager::EntityManager(Point&& ballStartPos, Game* pGame)
     : mBall(std::move(ballStartPos)),
@@ -43,6 +43,12 @@ void EntityManager::update() {
     break;
   case Game::State::LaunchReady:
     break;
+  case Game::State::StartNewRound:
+    mBlockManager.advanceBlockRows();
+    mBlockManager.addBlockRow();
+    mBall.reset();
+    mpGame->setState(Game::State::LaunchReady);
+    break;
   case Game::State::BallInMotion:
     mBall.update();
 
@@ -71,10 +77,7 @@ void EntityManager::update() {
     if (mBlockManager.atBlockRowMax()) {
       mpGame->setState(Game::State::GameOver);
     } else {
-      mBlockManager.advanceBlockRows();
-      mBlockManager.addBlockRow();
-      mBall.reset();
-      mpGame->setState(Game::State::LaunchReady);
+      mpGame->setState(Game::State::StartNewRound);
     }
     break;
   case Game::State::GameOver:
