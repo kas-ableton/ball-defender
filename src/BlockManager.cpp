@@ -9,6 +9,11 @@ namespace bd {
 BlockManager::BlockManager(int blockSize, int max)
     : mBlockSize(blockSize), mMaxRowHeight(max) {}
 
+void BlockManager::reset() {
+  mBlockRows.clear();
+  mRunningRowCount = 0;
+}
+
 int BlockManager::runningRowCount() const { return mRunningRowCount; }
 
 void BlockManager::advanceBlockRows() {

@@ -81,6 +81,8 @@ void EntityManager::update() {
     }
     break;
   case Game::State::GameOver:
+    mBlockManager.reset();
+    mBall.reset();
     break;
   }
 }

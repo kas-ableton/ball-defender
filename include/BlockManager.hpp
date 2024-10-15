@@ -26,6 +26,8 @@ public:
 
   BlockManager(int blockSize, int MaxRowHeight);
 
+  void reset();
+
   // for drawing
   // NOTE: positions are relative to the Play Area
   Blocks blocks() const;
