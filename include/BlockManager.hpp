@@ -15,10 +15,10 @@ struct Block {
   Point position;
   int hitCount;
 };
+using Blocks = std::vector<Block>;
 
 class BlockManager {
 public:
-  using Blocks = std::vector<Block>;
   struct Indices {
     int row;
     int column;

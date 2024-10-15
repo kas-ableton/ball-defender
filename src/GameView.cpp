@@ -3,6 +3,7 @@
 #include "Constants.hpp"
 #include "EntityManager.hpp"
 #include "Game.hpp"
+#include "Point.hpp"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
@@ -33,8 +34,8 @@ void GameView::addPlayAreaToDrawObjects() {
   addDrawObject(std::move(pPlayArea));
 }
 
-void GameView::addBlocksToDrawObjects() {
-  for (const auto& block : mpEntityManager->blockManager().blocks()) {
+void GameView::addBlocksToDrawObjects(const Blocks& blocks) {
+  for (const auto& block : blocks) {
     auto pBlock = std::make_unique<sf::RectangleShape>(
         sf::Vector2f(bd::kBlockSizeX, bd::kBlockSizeY));
 
@@ -46,11 +47,11 @@ void GameView::addBlocksToDrawObjects() {
   }
 }
 
-void GameView::addBallToDrawObjects(int x, int y) {
+void GameView::addBallToDrawObjects(const Point& position) {
   auto pBall = std::make_unique<sf::CircleShape>(kBallRadius);
 
   pBall->setFillColor(sf::Color(250, 250, 250));
-  pBall->setPosition(x, y);
+  pBall->setPosition(position.x(), position.y());
 
   addDrawObject(std::move(pBall));
 }
@@ -106,20 +107,18 @@ void GameView::draw() {
     addStartScreenToDrawObjects();
     break;
   case Game::State::LaunchReady:
-    addBallToDrawObjects(mpEntityManager->ball().position().x(),
-                         mpEntityManager->ball().position().y());
-    addBlocksToDrawObjects();
+    addBallToDrawObjects(mpEntityManager->ball().position());
+    addBlocksToDrawObjects(mpEntityManager->blockManager().blocks());
     break;
   case Game::State::BallInMotion:
-    addBallToDrawObjects(mpEntityManager->ball().position().x(),
-                         mpEntityManager->ball().position().y());
-    addBlocksToDrawObjects();
+    addBallToDrawObjects(mpEntityManager->ball().position());
+    addBlocksToDrawObjects(mpEntityManager->blockManager().blocks());
     break;
   case Game::State::BallDead:
-    addBlocksToDrawObjects();
+    addBlocksToDrawObjects(mpEntityManager->blockManager().blocks());
     break;
   case Game::State::GameOver:
-    addBlocksToDrawObjects();
+    addBlocksToDrawObjects(mpEntityManager->blockManager().blocks());
     addGameOverTextToDrawObjects();
     break;
   default:

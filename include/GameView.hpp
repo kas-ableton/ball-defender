@@ -11,8 +11,11 @@ class RenderWindow;
 } // namespace sf
 
 namespace bd {
+struct Block;
+using Blocks = std::vector<Block>;
 class Game;
 class EntityManager;
+class Point;
 
 const std::string kFontFile = "Courier New Bold.ttf";
 
@@ -23,9 +26,9 @@ public:
            const std::filesystem::path& resourcesPath);
 
   void addDrawObject(std::unique_ptr<sf::Drawable> object);
-  void addBallToDrawObjects(int x, int y);
+  void addBallToDrawObjects(const Point& position);
   void addPlayAreaToDrawObjects();
-  void addBlocksToDrawObjects();
+  void addBlocksToDrawObjects(const Blocks& blocks);
   void addScoreToDrawObjects(unsigned int score);
   void addGameOverTextToDrawObjects();
   void addStartScreenToDrawObjects();

@@ -97,7 +97,7 @@ void BlockManager::decrementBlockHitCount(const Indices& indices) {
   }
 }
 
-auto BlockManager::blocks() const -> Blocks {
+Blocks BlockManager::blocks() const {
   auto result = Blocks{};
 
   for (int m = 0; m < mBlockRows.size(); ++m) {
