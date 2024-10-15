@@ -22,8 +22,8 @@ void Ball::update() {
   auto newXPos = mInternalBallPosX + (mVector.xDelta * bd::kVelocity);
   auto newYPos = mInternalBallPosY + mVector.yDelta * bd::kVelocity;
 
-  mInternalBallPosX = std::clamp(newXPos, 0.0f, static_cast<float>(kPlayAreaX));
-  mInternalBallPosY = std::clamp(newYPos, 0.0f, static_cast<float>(kPlayAreaY));
+  mInternalBallPosX = std::clamp(newXPos, static_cast<float>(kWindowPadding), static_cast<float>(kPlayAreaX));
+  mInternalBallPosY = std::clamp(newYPos, static_cast<float>(kWindowPadding), static_cast<float>(kPlayAreaY));
 
   mPosition.setX(static_cast<int>(mInternalBallPosX));
   mPosition.setY(static_cast<int>(mInternalBallPosY));

@@ -11,7 +11,7 @@ template <class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
 template <class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
 EntityManager::EntityManager(Point&& ballStartPos, Game* pGame)
-    : mBall(std::move(ballStartPos)), mBlockManager(kBlockSizeY, kPlayAreaY),
+    : mBall(std::move(ballStartPos)), mBlockManager(kBlockSizeY, kPlayAreaY - bd::kBlockSizeY),
       mpGame(pGame) {}
 
 auto EntityManager::check(EntityType entity)
@@ -21,9 +21,9 @@ auto EntityManager::check(EntityType entity)
 
     if (ballPos.y() == kPlayAreaY) {
       return OutOfBoundsCollisionEntity{};
-    } else if (ballPos.x() == kPlayAreaX || ballPos.x() == 0) {
+    } else if (ballPos.x() == kPlayAreaX || ballPos.x() == kWindowPadding) {
       return WallCollisionEntity{Vector::Axis::X};
-    } else if (ballPos.y() == 0) {
+    } else if (ballPos.y() == kWindowPadding) {
       return WallCollisionEntity{Vector::Axis::Y};
 
     } else if (auto blockCollisions = mBlockManager.blockCollisions(
