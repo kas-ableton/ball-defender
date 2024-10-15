@@ -16,8 +16,9 @@ constexpr int kBallStartPosY = kPlayAreaY;
 
 constexpr float kVelocity = 10.0f;
 
-constexpr int kBlockSizeX = 30;
-constexpr int kBlockSizeY = 30;
+constexpr int kBlockSizeX = 45;
+constexpr int kBlockSizeY = 45;
+constexpr int kBlockHitCountTextSize = 20;
 
 constexpr int kBlockRowCount = kPlayAreaX / kBlockSizeX;
 } // namespace bd

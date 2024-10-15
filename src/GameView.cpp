@@ -43,7 +43,20 @@ void GameView::addBlocksToDrawObjects(const Blocks& blocks) {
     pBlock->setPosition(block.position.x() + bd::kWindowPadding,
                         block.position.y() + bd::kWindowPadding);
 
+    auto pHitCountText = std::make_unique<sf::Text>();
+    pHitCountText->setFont(mFont);
+    pHitCountText->setString(std::to_string(block.hitCount));
+    pHitCountText->setCharacterSize(bd::kBlockHitCountTextSize);
+    pHitCountText->setFillColor(sf::Color::Red);
+
+    const auto textSize = pHitCountText->getLocalBounds();
+    const auto blockPos = pBlock->getPosition();
+    pHitCountText->setPosition(
+        blockPos.x + ((bd::kBlockSizeX - static_cast<int>(textSize.width)) / 2),
+        blockPos.y + ((bd::kBlockSizeY - bd::kBlockHitCountTextSize) / 2));
+
     addDrawObject(std::move(pBlock));
+    addDrawObject(std::move(pHitCountText));
   }
 }
 
