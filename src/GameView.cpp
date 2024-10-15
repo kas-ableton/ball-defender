@@ -34,16 +34,15 @@ void GameView::addPlayAreaToDrawObjects() {
 }
 
 void GameView::addBlocksToDrawObjects() {
-  for (const auto& blockRow : mpEntityManager->blockManager().blocks()) {
-    for (const auto& [_, block] : blockRow.blocks()) {
-      auto pBlock = std::make_unique<sf::RectangleShape>(
-          sf::Vector2f(bd::kBlockSizeX, bd::kBlockSizeY));
+  for (const auto& block : mpEntityManager->blockManager().blocks()) {
+    auto pBlock = std::make_unique<sf::RectangleShape>(
+        sf::Vector2f(bd::kBlockSizeX, bd::kBlockSizeY));
 
-      pBlock->setFillColor(sf::Color(250, 250, 250));
-      pBlock->setPosition(block.position().x(), block.position().y());
+    pBlock->setFillColor(sf::Color(250, 250, 250));
+    pBlock->setPosition(block.position.x() + bd::kWindowPadding,
+                        block.position.y() + bd::kWindowPadding);
 
-      addDrawObject(std::move(pBlock));
-    }
+    addDrawObject(std::move(pBlock));
   }
 }
 
@@ -66,7 +65,7 @@ void GameView::addScoreToDrawObjects(unsigned int score) {
   pScoreText->setCharacterSize(characterSize);
   pScoreText->setFillColor(sf::Color(100, 250, 50));
   pScoreText->setPosition(bd::kPlayAreaX + (2 * bd::kWindowPadding),
-                         bd::kWindowPadding);
+                          bd::kWindowPadding);
 
   addDrawObject(std::move(pScoreText));
 }
@@ -77,8 +76,7 @@ void GameView::addGameOverTextToDrawObjects() {
   pGameOverText->setFont(mFont);
   pGameOverText->setString("Game over!");
   pGameOverText->setCharacterSize(50);
-  pGameOverText->setPosition(bd::kWindowSizeX / 2,
-                         bd::kWindowSizeY / 2);
+  pGameOverText->setPosition(bd::kWindowSizeX / 2, bd::kWindowSizeY / 2);
 
   addDrawObject(std::move(pGameOverText));
 }
@@ -90,7 +88,7 @@ void GameView::addStartScreenToDrawObjects() {
   pStartText->setString("Click anywhere to start");
   pStartText->setCharacterSize(30);
   pStartText->setPosition(bd::kWindowSizeX - bd::kPlayAreaX,
-                         bd::kWindowSizeY / 2);
+                          bd::kWindowSizeY / 2);
 
   addDrawObject(std::move(pStartText));
 }

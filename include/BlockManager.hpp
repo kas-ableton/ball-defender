@@ -1,68 +1,74 @@
 #pragma once
 
-#include "Point.hpp"
+#include "Constants.hpp"
+#include "Rect.hpp"
 #include "Vector.hpp"
 
-#include <map>
+#include <array>
 #include <optional>
-#include <tuple>
 #include <vector>
 
 namespace bd {
-class Block {
-public:
-  Block(unsigned int hc, Point&& pos);
+class Ball;
 
-  /* Returns the axis value where @param pos intersects
-   * returns null if @param pos doesn't intersect.
-   */
-  std::optional<Vector::Axis> impactSide(const Point& pos) const;
-  Point position() const;
-  void shift(Vector::Axis axis, int delta);
-
-  bool operator<(const Block& rhs) { return mPosition.x() < rhs.position().x(); }
-  friend Block& operator--(Block&);
-
-private:
-  unsigned int hitCount;
-  Point mPosition;
-};
-
-class BlockRow {
-public:
-  BlockRow(std::tuple<int, int> range);
-
-  void addBlock(Block&& block);
-  std::tuple<int, int> range() const;
-  const std::map<int, Block>& blocks() const;
-  std::map<int, Block>& blocks();
-
-private:
-  std::tuple<int, int> mRange;
-  std::map<int, Block> mBlocks;
+struct Block {
+  Point position;
+  int hitCount;
 };
 
 class BlockManager {
 public:
-  BlockManager(unsigned int max, int blockSize);
+  using Blocks = std::vector<Block>;
+  struct Indices {
+    int row;
+    int column;
+  };
 
-  void addBlockRow();
+  BlockManager(int blockSize, int MaxRowHeight);
+
+  // for drawing
+  // NOTE: positions are relative to the Play Area
+  Blocks blocks() const;
+
+  // operations for collision detection
+  struct BlockCollision {
+    BlockCollision(Indices&& indices, std::vector<Vector::Axis>&& axes)
+        : blockIndices(std::move(indices)), sides(std::move(axes)) {}
+    Indices blockIndices;
+    std::vector<Vector::Axis> sides;
+  };
+  std::optional<std::vector<BlockManager::BlockCollision>>
+  blockCollisions(Point&& ballPos);
+
+  // decrements HC, removes block row when empty
+  void decrementBlockHitCount(const Indices& indices);
+
+  // adding a new row
+  void addNewRow();
+
+  // tracking score
+  int runningRowCount() const;
+
+  // detecting game over
+  bool atMaxRowHeight() const;
+
+private:
+  struct BlockRow {
+    using hitCount = int;
+    Rect area;
+    std::array<hitCount, bd::kBlockRowCount> blocks;
+  };
 
   void advanceBlockRows();
 
-  unsigned int rowDepth() const;
+  void addNewRow(BlockRow&&);
 
-  bool atBlockRowMax() const;
+  Block getBlockAtIndices(const Indices&) const;
 
-  const std::vector<BlockRow>& blocks() const;
-
-  std::optional<Block> blockAtPosition(const Point& position);
-
-private:
   std::vector<BlockRow> mBlockRows;
-  // how many rows have been added so far
-  unsigned int mRowDepth = 0;
-  unsigned int mMax;
+
   int mBlockSize;
+  int mMaxRowHeight;
+  int mRunningRowCount;
 };
 } // namespace bd

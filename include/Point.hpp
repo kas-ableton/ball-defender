@@ -3,9 +3,15 @@
 #include <limits>
 
 namespace bd {
+
+struct Point;
+
+Point operator-(const Point& point, int value);
+
 struct Point {
   Point();
   Point(int _x, int _y);
+  Point(const Point&);
 
   explicit operator bool() const {
     return mX != std::numeric_limits<int>::max() &&

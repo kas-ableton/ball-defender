@@ -1,90 +1,114 @@
 #include "BlockManager.hpp"
 
-#include "Constants.hpp"
-#include "Point.hpp"
+#include "Ball.hpp"
+
+#include <random>
 
 namespace bd {
 
-/* Block */
+BlockManager::BlockManager(int blockSize, int max)
+    : mBlockSize(blockSize), mMaxRowHeight(max) {}
 
-Block& operator--(Block& lhs) {
-  lhs.hitCount -= 1;
-  return lhs;
-}
-
-Block::Block(unsigned int hc, Point&& pos) : hitCount(hc), mPosition(pos) {}
-
-std::optional<Vector::Axis> Block::impactSide(const Point&) const { return {}; }
-
-Point Block::position() const { return mPosition; }
-
-void Block::shift(Vector::Axis axis, int delta) {
-  if (axis == Vector::Axis::X) {
-    mPosition.setX(mPosition.x() + delta);
-  } else if (axis == Vector::Axis::Y) {
-    mPosition.setY(mPosition.y() + delta);
-  }
-}
-
-/* BlockRow */
-
-BlockRow::BlockRow(std::tuple<int, int> range) : mRange(range) {}
-
-void BlockRow::addBlock(Block&& block) {
-  mBlocks.emplace(block.position().x(), std::move(block));
-}
-
-std::tuple<int, int> BlockRow::range() const { return mRange; }
-
-const std::map<int, Block>& BlockRow::blocks() const { return mBlocks; }
-
-std::map<int, Block>& BlockRow::blocks() { return mBlocks; }
-
-/* BlockManager */
-
-BlockManager::BlockManager(unsigned int max, int blockSize)
-    : mMax(max), mBlockSize(blockSize) {}
-
-void BlockManager::addBlockRow() {
-  const auto startPos = static_cast<int>(kWindowPadding);
-  const auto prevRange =
-      mBlockRows.empty() ? std::tuple{0, 0} : mBlockRows.back().range();
-
-  auto newRow =
-      BlockRow(std::make_tuple(std::get<1>(prevRange) + mBlockSize,
-                               std::get<1>(prevRange) + 2 * mBlockSize));
-
-  // TODO
-  // generate blocks
-  // randomly generate positions
-  // randomly generate hc using rowDepth
-
-  auto hitCount = 1u;
-  // Use `startPos` as Y-value because blocks are always added from the top
-  auto position = Point{std::get<1>(prevRange) + mBlockSize, startPos};
-  newRow.addBlock({hitCount, std::move(position)});
-
-  mBlockRows.emplace_back(std::move(newRow));
-  mRowDepth++;
-}
+int BlockManager::runningRowCount() const { return mRunningRowCount; }
 
 void BlockManager::advanceBlockRows() {
-  for (auto& row : mBlockRows) {
-    for (auto& [_, block] : row.blocks()) {
-      block.shift(Vector::Axis::Y, mBlockSize);
+  std::for_each(mBlockRows.begin(), mBlockRows.end(),
+                [](auto& blockRow) { blockRow.area.shiftY(bd::kBlockSizeY); });
+}
+
+void BlockManager::addNewRow(BlockRow&& newBlockRow) {
+  mBlockRows.emplace_back(std::move(newBlockRow));
+  mRunningRowCount++;
+}
+
+void BlockManager::addNewRow() {
+  advanceBlockRows();
+
+  auto newBlockRow =
+      BlockRow{Rect{Point{0, 0}, mBlockSize, bd::kPlayAreaX}, {}};
+  newBlockRow.blocks.fill(0);
+
+  // TODO randomly create X new blocks
+  std::random_device rd;
+  std::uniform_int_distribution<int> dist(0, bd::kBlockRowCount);
+  const auto newIdx = dist(rd);
+
+  const int hitCount = 1;
+  newBlockRow.blocks[newIdx] = hitCount;
+
+  addNewRow(std::move(newBlockRow));
+}
+
+bool BlockManager::atMaxRowHeight() const {
+  if (mBlockRows.empty()) {
+    return false;
+  }
+
+  return mBlockRows.front().area.bottom() >= mMaxRowHeight;
+}
+
+Block BlockManager::getBlockAtIndices(const Indices& indices) const {
+  auto blockRow = mBlockRows.at(indices.column);
+  auto y = blockRow.area.top();
+  auto x = indices.row * mBlockSize;
+
+  return {Point{x, y}, blockRow.blocks[indices.row]};
+}
+
+std::optional<std::vector<BlockManager::BlockCollision>>
+BlockManager::blockCollisions(Point&& ballPos) {
+  auto ballRect = Rect{ballPos, 2 * bd::kBallRadius};
+
+  auto result = std::vector<BlockCollision>{};
+
+  for (int m = 0; m < mBlockRows.size(); ++m) {
+    if (mBlockRows[m].area.intersects(ballRect)) {
+      for (int n = 0; n < mBlockRows[m].blocks.size(); ++n) {
+        if (mBlockRows[m].blocks[n]) {
+          auto block = getBlockAtIndices({n, m});
+          auto blockRect = Rect{block.position, mBlockSize};
+
+          if (const auto overlap = blockRect.overlap(ballRect))
+          {
+            auto sides = std::vector<Vector::Axis>{};
+            if (overlap->height() < overlap->width()) {
+              sides.push_back(Vector::Axis::Y);
+            } else if (overlap->width() < overlap->height()) {
+              sides.push_back(Vector::Axis::X);
+            } else {
+              sides.push_back(Vector::Axis::Y);
+              sides.push_back(Vector::Axis::X);
+            }
+            result.emplace_back(Indices{n, m}, std::move(sides));
+          }
+        }
+      }
     }
+  }
+  return result.empty() ? std::nullopt : std::make_optional(result);
+}
+
+void BlockManager::decrementBlockHitCount(const Indices& indices) {
+  auto& blocks = mBlockRows[indices.column].blocks;
+  blocks[indices.row]--;
+  if (std::all_of(blocks.begin(), blocks.end(),
+                  [](const auto& value) { return value == 0; })) {
+    mBlockRows.erase(mBlockRows.begin() + indices.column);
   }
 }
 
-unsigned int BlockManager::rowDepth() const { return mRowDepth; }
+auto BlockManager::blocks() const -> Blocks {
+  auto result = Blocks{};
 
-bool BlockManager::atBlockRowMax() const {
-  return static_cast<unsigned int>(
-             mBlockRows.back().blocks().begin()->second.position().y()) == mMax;
+  for (int m = 0; m < mBlockRows.size(); ++m) {
+    for (int n = 0; n < mBlockRows[m].blocks.size(); ++n) {
+      if (mBlockRows[m].blocks[n] > 0) {
+        result.emplace_back(getBlockAtIndices({n, m}));
+      }
+    }
+  }
+
+  return result;
 }
-
-const std::vector<BlockRow>& BlockManager::blocks() const { return mBlockRows; }
-
-std::optional<Block> BlockManager::blockAtPosition(const Point&) { return {}; }
 
 } // namespace bd

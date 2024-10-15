@@ -35,10 +35,10 @@ private:
   struct OutOfBoundsCollisionEntity : public CollisionEntity {};
 
   struct BlockCollisionEntity : public CollisionEntity {
-    BlockCollisionEntity(Block* pBlock, Vector::Axis side)
-        : block(pBlock), impactSide(side) {}
-    Block* block;
-    Vector::Axis impactSide;
+    BlockCollisionEntity(BlockManager::Indices&& idx, std::vector<Vector::Axis>&& sides)
+        : indices(std::move(idx)), impactSides(std::move(sides)) {}
+    BlockManager::Indices indices;
+    std::vector<Vector::Axis> impactSides;
   };
 
   using CollisionEntities =

@@ -8,11 +8,11 @@
 namespace bd {
 
 template <class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
-template <class... Ts> overloaded(Ts...)->overloaded<Ts...>;
+template <class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
 EntityManager::EntityManager(Point&& ballStartPos, Game* pGame)
-    : mBall(std::move(ballStartPos)),
-      mBlockManager(kPlayAreaY - kBlockSizeY, kBlockSizeY), mpGame(pGame) {}
+    : mBall(std::move(ballStartPos)), mBlockManager(kBlockSizeY, kPlayAreaY),
+      mpGame(pGame) {}
 
 auto EntityManager::check(EntityType entity)
     -> std::optional<CollisionEntities> {
@@ -25,12 +25,12 @@ auto EntityManager::check(EntityType entity)
       return WallCollisionEntity{Vector::Axis::X};
     } else if (ballPos.y() == 0) {
       return WallCollisionEntity{Vector::Axis::Y};
-    } else if (auto block = mBlockManager.blockAtPosition(ballPos)) {
-      if (auto impactSide = block->impactSide(ballPos)) {
-        return BlockCollisionEntity{&*block, impactSide == Vector::Axis::X
-                                                 ? Vector::Axis::Y
-                                                 : Vector::Axis::X};
-      }
+
+    } else if (auto blockCollisions = mBlockManager.blockCollisions(
+                   mBall.position() - bd::kWindowPadding)) {
+      return BlockCollisionEntity{
+          std::move(blockCollisions->front().blockIndices),
+          std::move(blockCollisions->front().sides)};
     }
   }
 
@@ -44,8 +44,7 @@ void EntityManager::update() {
   case Game::State::LaunchReady:
     break;
   case Game::State::StartNewRound:
-    mBlockManager.advanceBlockRows();
-    mBlockManager.addBlockRow();
+    mBlockManager.addNewRow();
     mBall.reset();
     mpGame->setState(Game::State::LaunchReady);
     break;
@@ -53,28 +52,29 @@ void EntityManager::update() {
     mBall.update();
 
     if (auto other = check(EntityType::Ball)) {
-      std::visit(overloaded{[this](const OutOfBoundsCollisionEntity&) {
-                              mpGame->setState(Game::State::BallDead);
-                            },
-                            [this](const WallCollisionEntity& wall) {
-                              mBall.vector().reflect(wall.impactSide ==
-                                                             Vector::Axis::X
-                                                         ? Vector::Axis::Y
-                                                         : Vector::Axis::X);
-                            },
-                            [this](BlockCollisionEntity& block) {
-                              mBall.vector().reflect(block.impactSide ==
-                                                             Vector::Axis::X
-                                                         ? Vector::Axis::Y
-                                                         : Vector::Axis::X);
-                              block.block--;
-                            }},
-                 *other);
+      std::visit(
+          overloaded{[this](const OutOfBoundsCollisionEntity&) {
+                       mpGame->setState(Game::State::BallDead);
+                     },
+                     [this](const WallCollisionEntity& wall) {
+                       mBall.vector().reflect(wall.impactSide == Vector::Axis::X
+                                                  ? Vector::Axis::Y
+                                                  : Vector::Axis::X);
+                     },
+                     [this](BlockCollisionEntity& block) {
+                       for (const auto side : block.impactSides) {
+                         mBall.vector().reflect(side == Vector::Axis::X
+                                                    ? Vector::Axis::Y
+                                                    : Vector::Axis::X);
+                       }
+                       mBlockManager.decrementBlockHitCount(block.indices);
+                     }},
+          *other);
     }
 
     break;
   case Game::State::BallDead:
-    if (mBlockManager.atBlockRowMax()) {
+    if (mBlockManager.atMaxRowHeight()) {
       mpGame->setState(Game::State::GameOver);
     } else {
       mpGame->setState(Game::State::StartNewRound);
@@ -93,5 +93,7 @@ const BlockManager& EntityManager::blockManager() const {
 
 BlockManager& EntityManager::blockManager() { return mBlockManager; }
 
-unsigned int EntityManager::score() const { return mBlockManager.rowDepth(); }
+unsigned int EntityManager::score() const {
+  return mBlockManager.runningRowCount();
+}
 } // namespace bd
