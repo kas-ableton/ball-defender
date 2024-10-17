@@ -11,8 +11,8 @@ template <class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
 template <class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
 EntityManager::EntityManager(Point&& ballStartPos, Game* pGame)
-    : mBall(std::move(ballStartPos)), mBlockManager(kBlockSizeY, kPlayAreaY - bd::kBlockSizeY),
-      mpGame(pGame) {}
+    : mBall(std::move(ballStartPos)),
+      mBlockManager(kBlockSizeY, kPlayAreaY - bd::kBlockSizeY, bd::kPlayAreaX), mpGame(pGame) {}
 
 auto EntityManager::check(EntityType entity)
     -> std::optional<CollisionEntities> {

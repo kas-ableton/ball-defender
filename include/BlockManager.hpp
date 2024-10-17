@@ -24,7 +24,7 @@ public:
     int column;
   };
 
-  BlockManager(int blockSize, int MaxRowHeight);
+  BlockManager(int blockSize, int MaxRowHeight, int blockRowWidth);
 
   void reset();
 
@@ -70,6 +70,7 @@ private:
   std::vector<BlockRow> mBlockRows;
 
   int mBlockSize;
+  int mBlockRowWidth;
   int mMaxRowHeight;
   int mRunningRowCount;
 };

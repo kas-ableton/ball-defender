@@ -6,8 +6,8 @@
 
 namespace bd {
 
-BlockManager::BlockManager(int blockSize, int max)
-    : mBlockSize(blockSize), mMaxRowHeight(max) {}
+BlockManager::BlockManager(int blockSize, int max, int blockRowWidth)
+    : mBlockSize(blockSize), mMaxRowHeight(max), mBlockRowWidth(blockRowWidth) {}
 
 void BlockManager::reset() {
   mBlockRows.clear();
