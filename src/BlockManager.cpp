@@ -14,6 +14,7 @@ void BlockManager::reset() {
   mRunningRowCount = 0;
 }
 
+
 int BlockManager::runningRowCount() const { return mRunningRowCount; }
 
 void BlockManager::advanceBlockRows() {
@@ -21,28 +22,80 @@ void BlockManager::advanceBlockRows() {
                 [](auto& blockRow) { blockRow.area.shiftY(bd::kBlockSizeY); });
 }
 
-void BlockManager::addNewRow(BlockRow&& newBlockRow) {
-  mBlockRows.emplace_back(std::move(newBlockRow));
-  mRunningRowCount++;
+
+auto BlockManager::makeBlockRowData() const -> BlockRowData {
+  auto data = BlockRowData{};
+
+  std::fill(data.begin(), data.end(), 0);
+
+  std::random_device rd;
+  std::uniform_int_distribution<int> dist(0, bd::kBlockRowCount - 1);
+
+  for (auto i = 0; i < bd::kBlockRowCount / 2; ++i) {
+    auto idx = dist(rd);
+    data[idx] = makeBlockHitCount();
+  }
+
+  return data;
 }
+
+int BlockManager::makeBlockHitCount() const {
+  int lowest = 0;
+  int highest = 0;
+
+  if (mRunningRowCount < 5) {
+    lowest = 1;
+    highest = 1;
+  } else if (mRunningRowCount < 10) {
+    lowest = 1;
+    highest = 2;
+  } else if (mRunningRowCount < 20) {
+    lowest = 1;
+    highest = 4;
+  } else if (mRunningRowCount < 30) {
+    lowest = 2;
+    highest = 7;
+  } else if (mRunningRowCount < 40) {
+    lowest = 3;
+    highest = 10;
+  } else if (mRunningRowCount < 50) {
+    lowest = 5;
+    highest = 15;
+  } else if (mRunningRowCount < 70) {
+    lowest = 8;
+    highest = 20;
+  } else {
+    lowest = 10;
+    highest = 25;
+  }
+
+  if (lowest == highest) {
+    return lowest;
+  }
+
+  std::random_device rd;
+  std::uniform_int_distribution<int> dist(lowest, highest);
+
+  return dist(rd);
+}
+
+
+auto BlockManager::makeBlockRow(Point&& topLeft) -> BlockRow {
+  return {Rect{std::move(topLeft), mBlockSize, mBlockRowWidth},
+          makeBlockRowData()};
+}
+
 
 void BlockManager::addNewRow() {
   advanceBlockRows();
 
-  auto newBlockRow =
-      BlockRow{Rect{Point{0, 0}, mBlockSize, bd::kPlayAreaX}, {}};
-  newBlockRow.blocks.fill(0);
+  auto newBlockRow = makeBlockRow(Point{0, 0});
 
-  // TODO randomly create X new blocks
-  std::random_device rd;
-  std::uniform_int_distribution<int> dist(0, bd::kBlockRowCount);
-  const auto newIdx = dist(rd);
+  mBlockRows.emplace_back(std::move(newBlockRow));
 
-  const int hitCount = 1;
-  newBlockRow.blocks[newIdx] = hitCount;
-
-  addNewRow(std::move(newBlockRow));
+  mRunningRowCount++;
 }
+
 
 bool BlockManager::atMaxRowHeight() const {
   if (mBlockRows.empty()) {
@@ -52,6 +105,7 @@ bool BlockManager::atMaxRowHeight() const {
   return mBlockRows.front().area.bottom() >= mMaxRowHeight;
 }
 
+
 Block BlockManager::getBlockAtIndices(const Indices& indices) const {
   auto blockRow = mBlockRows.at(indices.column);
   auto y = blockRow.area.top();
@@ -59,6 +113,7 @@ Block BlockManager::getBlockAtIndices(const Indices& indices) const {
 
   return {Point{x, y}, blockRow.blocks[indices.row]};
 }
+
 
 std::optional<std::vector<BlockManager::BlockCollision>>
 BlockManager::blockCollisions(Point&& ballPos) {
@@ -73,8 +128,7 @@ BlockManager::blockCollisions(Point&& ballPos) {
           auto block = getBlockAtIndices({n, m});
           auto blockRect = Rect{block.position, mBlockSize};
 
-          if (const auto overlap = blockRect.overlap(ballRect))
-          {
+          if (const auto overlap = blockRect.overlap(ballRect)) {
             auto sides = std::vector<Vector::Axis>{};
             if (overlap->height() < overlap->width()) {
               sides.push_back(Vector::Axis::Y);
@@ -93,6 +147,7 @@ BlockManager::blockCollisions(Point&& ballPos) {
   return result.empty() ? std::nullopt : std::make_optional(result);
 }
 
+
 void BlockManager::decrementBlockHitCount(const Indices& indices) {
   auto& blocks = mBlockRows[indices.column].blocks;
   blocks[indices.row]--;
@@ -101,6 +156,7 @@ void BlockManager::decrementBlockHitCount(const Indices& indices) {
     mBlockRows.erase(mBlockRows.begin() + indices.column);
   }
 }
+
 
 Blocks BlockManager::blocks() const {
   auto result = Blocks{};

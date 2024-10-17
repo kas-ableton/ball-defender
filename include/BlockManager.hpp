@@ -55,15 +55,20 @@ public:
   bool atMaxRowHeight() const;
 
 private:
+  using hitCount = int;
+  using BlockRowData = std::array<hitCount, bd::kBlockRowCount>;
   struct BlockRow {
-    using hitCount = int;
     Rect area;
-    std::array<hitCount, bd::kBlockRowCount> blocks;
+    BlockRowData blocks;
   };
 
-  void advanceBlockRows();
+  BlockRowData makeBlockRowData() const;
+  int makeBlockHitCount() const;
+  BlockRow makeBlockRow(Point&& topLeft);
 
-  void addNewRow(BlockRow&&);
+  // Moves all existing rows down by the distance of one row height
+  // New rows are added from the top of the play area
+  void advanceBlockRows();
 
   Block getBlockAtIndices(const Indices&) const;
 
@@ -72,6 +77,8 @@ private:
   int mBlockSize;
   int mBlockRowWidth;
   int mMaxRowHeight;
+
+  // this value is used as the score
   int mRunningRowCount;
 };
 } // namespace bd

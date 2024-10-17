@@ -39,8 +39,8 @@ auto EntityManager::check(EntityType entity)
 
 void EntityManager::update() {
   switch (mpGame->state()) {
+    // nothing to do, wait for user input
   case Game::State::Unstarted:
-    break;
   case Game::State::LaunchReady:
     break;
   case Game::State::StartNewRound:
@@ -53,22 +53,23 @@ void EntityManager::update() {
 
     if (auto other = check(EntityType::Ball)) {
       std::visit(
-          overloaded{[this](const OutOfBoundsCollisionEntity&) {
-                       mpGame->setState(Game::State::BallDead);
-                     },
-                     [this](const WallCollisionEntity& wall) {
-                       mBall.vector().reflect(wall.impactSide == Vector::Axis::X
-                                                  ? Vector::Axis::Y
-                                                  : Vector::Axis::X);
-                     },
-                     [this](BlockCollisionEntity& block) {
-                       for (const auto side : block.impactSides) {
-                         mBall.vector().reflect(side == Vector::Axis::X
-                                                    ? Vector::Axis::Y
-                                                    : Vector::Axis::X);
-                       }
-                       mBlockManager.decrementBlockHitCount(block.indices);
-                     }},
+          overloaded{
+              [this](const OutOfBoundsCollisionEntity&) {
+                mpGame->setState(Game::State::BallDead);
+              },
+              [this](const WallCollisionEntity& wall) {
+                mBall.vector().reflect(wall.impactSide == Vector::Axis::X
+                                           ? Vector::Axis::Y
+                                           : Vector::Axis::X);
+              },
+              [this](BlockCollisionEntity& block) {
+                for (const auto side : block.impactSides) {
+                  mBall.vector().reflect(side == Vector::Axis::X
+                                             ? Vector::Axis::Y
+                                             : Vector::Axis::X);
+                }
+                mBlockManager.decrementBlockHitCount(block.indices);
+              }},
           *other);
     }
 

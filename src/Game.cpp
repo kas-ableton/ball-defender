@@ -9,7 +9,6 @@
 
 namespace bd {
 
-
 Game::Game(sf::RenderWindow* window, const std::filesystem::path& resourcesPath)
     : mGameView(window, this, &mEntityManager, resourcesPath),
       mEntityManager({bd::kBallStartPosX, bd::kBallStartPosY}, this) {}
@@ -33,7 +32,7 @@ void Game::handleEvent(const sf::Event& event) {
       setState(State::BallInMotion);
     }
   } else if (state() == State::GameOver) {
-      setState(State::Unstarted);
+    setState(State::Unstarted);
   }
 }
 
@@ -42,8 +41,6 @@ void Game::run() {
   mGameView.draw();
 }
 
-unsigned int Game::score() const {
-  return mEntityManager.score();
-}
+unsigned int Game::score() const { return mEntityManager.score(); }
 
 } // namespace bd
