@@ -12,7 +12,9 @@ Ball::Ball(Point&& ballStartPos)
 
 Point Ball::position() const { return mPosition; }
 
-Vector& Ball::vector() { return mVector; }
+void Ball::reflect(Vector::Axis axis) {
+  mVector.reflect(axis);
+}
 
 void Ball::onLaunch(Point&& startPos, Point&& endPos) {
   mVector = Vector{std::move(startPos), std::move(endPos)};

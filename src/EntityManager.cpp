@@ -12,7 +12,8 @@ template <class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
 EntityManager::EntityManager(Point&& ballStartPos, Game* pGame)
     : mBall(std::move(ballStartPos)),
-      mBlockManager(kBlockSizeY, kPlayAreaY - bd::kBlockSizeY, bd::kPlayAreaX), mpGame(pGame) {}
+      mBlockManager(kBlockSizeY, kPlayAreaY - bd::kBlockSizeY, bd::kPlayAreaX),
+      mpGame(pGame) {}
 
 auto EntityManager::check(EntityType entity)
     -> std::optional<CollisionEntities> {
@@ -52,25 +53,24 @@ void EntityManager::update() {
     mBall.update();
 
     if (auto other = check(EntityType::Ball)) {
-      std::visit(
-          overloaded{
-              [this](const OutOfBoundsCollisionEntity&) {
-                mpGame->setState(Game::State::BallDead);
-              },
-              [this](const WallCollisionEntity& wall) {
-                mBall.vector().reflect(wall.impactSide == Vector::Axis::X
-                                           ? Vector::Axis::Y
-                                           : Vector::Axis::X);
-              },
-              [this](BlockCollisionEntity& block) {
-                for (const auto side : block.impactSides) {
-                  mBall.vector().reflect(side == Vector::Axis::X
-                                             ? Vector::Axis::Y
-                                             : Vector::Axis::X);
-                }
-                mBlockManager.decrementBlockHitCount(block.indices);
-              }},
-          *other);
+      std::visit(overloaded{[this](const OutOfBoundsCollisionEntity&) {
+                              mpGame->setState(Game::State::BallDead);
+                            },
+                            [this](const WallCollisionEntity& wall) {
+                              mBall.reflect(wall.impactSide == Vector::Axis::X
+                                                ? Vector::Axis::Y
+                                                : Vector::Axis::X);
+                            },
+                            [this](BlockCollisionEntity& block) {
+                              for (const auto side : block.impactSides) {
+                                mBall.reflect(side == Vector::Axis::X
+                                                  ? Vector::Axis::Y
+                                                  : Vector::Axis::X);
+                              }
+                              mBlockManager.decrementBlockHitCount(
+                                  block.indices);
+                            }},
+                 *other);
     }
 
     break;
