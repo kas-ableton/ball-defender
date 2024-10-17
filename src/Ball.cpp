@@ -31,7 +31,9 @@ void Ball::update() {
 
 void Ball::reset() {
   mVector.reset();
-  mPosition = mLaunchPosition;
+  // we assume reset is called after the ball last exited the play area
+  // so, only reset the y-position. The x-position is already correct.
+  mPosition.setY(mLaunchPosition.y());
   mInternalBallPosX = mPosition.x();
   mInternalBallPosY = mPosition.y();
 }

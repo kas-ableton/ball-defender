@@ -120,8 +120,8 @@ void GameView::draw() {
     addStartScreenToDrawObjects();
     break;
   case Game::State::LaunchReady:
-    addBallToDrawObjects(mpEntityManager->ball().position());
     addBlocksToDrawObjects(mpEntityManager->blockManager().blocks());
+    addBallToDrawObjects(mpEntityManager->ball().position());
     break;
   case Game::State::BallInMotion:
     addBallToDrawObjects(mpEntityManager->ball().position());
