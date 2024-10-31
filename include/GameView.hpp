@@ -19,6 +19,7 @@ class Point;
 
 const std::string kFontFile = "Courier New Bold.ttf";
 
+
 class GameView {
 public:
   GameView(sf::RenderWindow* window, Game* pGame,
@@ -33,6 +34,8 @@ public:
   void addGameOverTextToDrawObjects();
   void addStartScreenToDrawObjects();
 
+  float scaleSize() const;
+
   void draw();
 
 private:
@@ -40,6 +43,8 @@ private:
 
   sf::RenderWindow* mpWindow;
   sf::Font mFont;
+
+  float mSizeScale = 1.0f;
 
   Game* mpGame;
   EntityManager* mpEntityManager;

@@ -9,6 +9,7 @@
 #include <optional>
 
 constexpr const char* kTitle = "Ball Defender";
+constexpr int kTitleBarHeightHeuristic = 50;
 
 std::optional<std::filesystem::path> parseArgs(int argc, char* argv[]) {
   if (argc < 2) {
@@ -26,9 +27,11 @@ int main(int argc, char* argv[]) {
     std::exit(1);
   }
 
-  auto window = sf::RenderWindow{{bd::kWindowSizeX, bd::kWindowSizeY},
-                                 kTitle,
-                                 sf::Style::Titlebar | sf::Style::Close};
+  auto desktop = sf::VideoMode::getDesktopMode();
+  auto window = sf::RenderWindow{
+      {desktop.width, desktop.height - kTitleBarHeightHeuristic},
+      kTitle,
+      sf::Style::Titlebar | sf::Style::Close};
   window.setFramerateLimit(144);
 
   bd::Game gameInstance(&window, *resourcesPath);
