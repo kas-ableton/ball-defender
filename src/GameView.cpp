@@ -18,6 +18,7 @@ GameView::GameView(sf::RenderWindow* window, Game* pGame,
                    const std::filesystem::path& resourcesPath)
     : mpWindow(window), mpGame(pGame), mpEntityManager(pEntityManager) {
   mFont.loadFromFile(resourcesPath / kFontFile);
+  mSizeScale = mpWindow->getSize().y / static_cast<float>(kWindowSizeY);
 }
 
 void GameView::addDrawObject(std::unique_ptr<sf::Drawable> object) {
@@ -29,7 +30,7 @@ void GameView::addPlayAreaToDrawObjects() {
       sf::Vector2f(bd::kPlayAreaX, bd::kPlayAreaY));
 
   pPlayArea->setFillColor(sf::Color(100, 250, 50));
-  pPlayArea->setPosition(bd::kWindowPadding, bd::kWindowPadding);
+  pPlayArea->setPosition(0.0f, 0.0f);
 
   addDrawObject(std::move(pPlayArea));
 }
@@ -40,8 +41,8 @@ void GameView::addBlocksToDrawObjects(const Blocks& blocks) {
         sf::Vector2f(bd::kBlockSizeX, bd::kBlockSizeY));
 
     pBlock->setFillColor(sf::Color(250, 250, 250));
-    pBlock->setPosition(block.position.x() + bd::kWindowPadding,
-                        block.position.y() + bd::kWindowPadding);
+    pBlock->setPosition(block.position.x(),
+                        block.position.y());
 
     auto pHitCountText = std::make_unique<sf::Text>();
     pHitCountText->setFont(mFont);
@@ -78,8 +79,9 @@ void GameView::addScoreToDrawObjects(unsigned int score) {
   pScoreText->setString(std::to_string(score));
   pScoreText->setCharacterSize(characterSize);
   pScoreText->setFillColor(sf::Color(100, 250, 50));
+  // TODO think about how to do this...
   pScoreText->setPosition(bd::kPlayAreaX + (2 * bd::kWindowPadding),
-                          bd::kWindowPadding);
+                          0);
 
   addDrawObject(std::move(pScoreText));
 }
@@ -106,6 +108,11 @@ void GameView::addStartScreenToDrawObjects() {
 
   addDrawObject(std::move(pStartText));
 }
+
+float GameView::scaleSize () const {
+  return mSizeScale;
+}
+
 
 void GameView::draw() {
   reset();
@@ -138,8 +145,13 @@ void GameView::draw() {
     break;
   }
 
-  for (const auto& obj : mDrawObjects) {
-    mpWindow->draw(*obj);
+  sf::Transform Transform;
+  auto paddingAmount = bd::kWindowPadding * mSizeScale;
+  Transform.translate(paddingAmount, paddingAmount);
+  Transform.scale(mSizeScale, mSizeScale);
+
+  for (auto& obj : mDrawObjects) {
+    mpWindow->draw(*obj, Transform);
   }
 }
 

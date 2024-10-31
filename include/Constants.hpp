@@ -3,7 +3,7 @@
 
 namespace bd {
 constexpr unsigned int kWindowSizeX = 880;
-constexpr unsigned int kWindowSizeY = 880;
+constexpr float kWindowSizeY = 880.f;
 
 constexpr unsigned int kWindowPadding = 20;
 
@@ -11,8 +11,8 @@ constexpr int kPlayAreaX = 720;
 constexpr int kPlayAreaY = kWindowSizeY - (2 * kWindowPadding);
 
 constexpr unsigned int kBallRadius = 10;
-constexpr int kBallStartPosX = kWindowPadding + kPlayAreaX / 2;
-constexpr int kBallStartPosY = kPlayAreaY - kBallRadius / 2;
+constexpr int kBallStartPosX = kPlayAreaX / 2;
+constexpr int kBallStartPosY = kPlayAreaY;
 
 constexpr float kVelocity = 10.0f;
 

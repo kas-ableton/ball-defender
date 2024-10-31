@@ -22,13 +22,13 @@ auto EntityManager::check(EntityType entity)
 
     if (ballPos.y() == kPlayAreaY) {
       return OutOfBoundsCollisionEntity{};
-    } else if (ballPos.x() == kPlayAreaX || ballPos.x() == kWindowPadding) {
+    } else if (ballPos.x() == kPlayAreaX || ballPos.x() == 0.0) {
       return WallCollisionEntity{Vector::Axis::X};
-    } else if (ballPos.y() == kWindowPadding) {
+    } else if (ballPos.y() == 0.0) {
       return WallCollisionEntity{Vector::Axis::Y};
 
     } else if (auto blockCollisions = mBlockManager.blockCollisions(
-                   mBall.position() - bd::kWindowPadding)) {
+                   mBall.position())) {
       return BlockCollisionEntity{
           std::move(blockCollisions->front().blockIndices),
           std::move(blockCollisions->front().sides)};
