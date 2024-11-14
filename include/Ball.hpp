@@ -9,7 +9,8 @@ class Ball {
 public:
   Ball(Point&& ballStartPos);
   Point position() const;
-  void reflect(Vector::Axis axis);
+  const Vector& vector() const;
+  void setVector(const Vector& newVector);
   void onLaunch(Point&& startPos, Point&& endPos);
   void update();
   void reset();

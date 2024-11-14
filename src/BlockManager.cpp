@@ -7,13 +7,13 @@
 namespace bd {
 
 BlockManager::BlockManager(int blockSize, int max, int blockRowWidth)
-    : mBlockSize(blockSize), mMaxRowHeight(max), mBlockRowWidth(blockRowWidth) {}
+    : mBlockSize(blockSize), mMaxRowHeight(max), mBlockRowWidth(blockRowWidth) {
+}
 
 void BlockManager::reset() {
   mBlockRows.clear();
   mRunningRowCount = 0;
 }
-
 
 int BlockManager::runningRowCount() const { return mRunningRowCount; }
 
@@ -21,7 +21,6 @@ void BlockManager::advanceBlockRows() {
   std::for_each(mBlockRows.begin(), mBlockRows.end(),
                 [](auto& blockRow) { blockRow.area.shiftY(bd::kBlockSizeY); });
 }
-
 
 auto BlockManager::makeBlockRowData() const -> BlockRowData {
   auto data = BlockRowData{};
@@ -79,12 +78,10 @@ int BlockManager::makeBlockHitCount() const {
   return dist(rd);
 }
 
-
 auto BlockManager::makeBlockRow(Point&& topLeft) -> BlockRow {
   return {Rect{std::move(topLeft), mBlockSize, mBlockRowWidth},
           makeBlockRowData()};
 }
-
 
 void BlockManager::addNewRow() {
   advanceBlockRows();
@@ -96,7 +93,6 @@ void BlockManager::addNewRow() {
   mRunningRowCount++;
 }
 
-
 bool BlockManager::atMaxRowHeight() const {
   if (mBlockRows.empty()) {
     return false;
@@ -104,7 +100,6 @@ bool BlockManager::atMaxRowHeight() const {
 
   return mBlockRows.front().area.bottom() >= mMaxRowHeight;
 }
-
 
 Block BlockManager::getBlockAtIndices(const Indices& indices) const {
   auto blockRow = mBlockRows.at(indices.column);
@@ -114,10 +109,10 @@ Block BlockManager::getBlockAtIndices(const Indices& indices) const {
   return {Point{x, y}, blockRow.blocks[indices.row]};
 }
 
-
+// return the collision normal
 std::optional<std::vector<BlockManager::BlockCollision>>
-BlockManager::blockCollisions(Point&& ballPos) {
-  auto ballRect = Rect{ballPos, 2 * bd::kBallRadius};
+BlockManager::blockCollisions(const Ball& ball) {
+  auto ballRect = Rect{ball.position(), 2 * bd::kBallRadius};
 
   auto result = std::vector<BlockCollision>{};
 
@@ -130,15 +125,15 @@ BlockManager::blockCollisions(Point&& ballPos) {
 
           if (const auto overlap = blockRect.overlap(ballRect)) {
             auto sides = std::vector<Vector::Axis>{};
+            Vector collisionNormal;
             if (overlap->height() < overlap->width()) {
-              sides.push_back(Vector::Axis::Y);
+              collisionNormal =
+                  ball.vector().y > 0.0 ? kOverSideNormal : kBottomSideNormal;
             } else if (overlap->width() < overlap->height()) {
-              sides.push_back(Vector::Axis::X);
-            } else {
-              sides.push_back(Vector::Axis::Y);
-              sides.push_back(Vector::Axis::X);
+              collisionNormal =
+                  ball.vector().x > 0.0 ? kLeftSideNormal : kRightSideNormal;
             }
-            result.emplace_back(Indices{n, m}, std::move(sides));
+            result.emplace_back(Indices{n, m}, std::move(collisionNormal));
           }
         }
       }
@@ -146,7 +141,6 @@ BlockManager::blockCollisions(Point&& ballPos) {
   }
   return result.empty() ? std::nullopt : std::make_optional(result);
 }
-
 
 void BlockManager::decrementBlockHitCount(const Indices& indices) {
   auto& blocks = mBlockRows[indices.column].blocks;
@@ -156,7 +150,6 @@ void BlockManager::decrementBlockHitCount(const Indices& indices) {
     mBlockRows.erase(mBlockRows.begin() + indices.column);
   }
 }
-
 
 Blocks BlockManager::blocks() const {
   auto result = Blocks{};

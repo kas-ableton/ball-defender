@@ -34,13 +34,13 @@ public:
 
   // operations for collision detection
   struct BlockCollision {
-    BlockCollision(Indices&& indices, std::vector<Vector::Axis>&& axes)
-        : blockIndices(std::move(indices)), sides(std::move(axes)) {}
+    BlockCollision(Indices&& indices, Vector&& collisionNormal)
+        : blockIndices(std::move(indices)), normal(std::move(collisionNormal)) {}
     Indices blockIndices;
-    std::vector<Vector::Axis> sides;
+    Vector normal;
   };
   std::optional<std::vector<BlockManager::BlockCollision>>
-  blockCollisions(Point&& ballPos);
+  blockCollisions(const Ball& ball);
 
   // decrements HC, removes block row when empty
   void decrementBlockHitCount(const Indices& indices);

@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <memory>
+#include <iostream>
 
 namespace bd {
 Ball::Ball(Point&& ballStartPos)
@@ -12,8 +13,12 @@ Ball::Ball(Point&& ballStartPos)
 
 Point Ball::position() const { return mPosition; }
 
-void Ball::reflect(Vector::Axis axis) {
-  mVector.reflect(axis);
+void Ball::setVector(const Vector& newVector) {
+  mVector = newVector;
+}
+
+const Vector& Ball::vector() const {
+  return mVector;
 }
 
 void Ball::onLaunch(Point&& startPos, Point&& endPos) {

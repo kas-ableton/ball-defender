@@ -11,6 +11,7 @@
 namespace bd {
 class Game;
 
+
 class EntityManager {
 public:
   EntityManager(Point&& ballStartPos, Game* pGame);
@@ -28,17 +29,17 @@ private:
   struct CollisionEntity {};
 
   struct WallCollisionEntity : public CollisionEntity {
-    WallCollisionEntity(Vector::Axis side) : impactSide(side) {}
-    Vector::Axis impactSide;
+    WallCollisionEntity(const Vector& n) : normal(n) {}
+    Vector normal;
   };
 
   struct OutOfBoundsCollisionEntity : public CollisionEntity {};
 
   struct BlockCollisionEntity : public CollisionEntity {
-    BlockCollisionEntity(BlockManager::Indices&& idx, std::vector<Vector::Axis>&& sides)
-        : indices(std::move(idx)), impactSides(std::move(sides)) {}
+    BlockCollisionEntity(BlockManager::Indices&& idx, Vector&& collisionNormal)
+        : indices(std::move(idx)), normal(std::move(collisionNormal)) {}
     BlockManager::Indices indices;
-    std::vector<Vector::Axis> impactSides;
+    Vector normal;
   };
 
   using CollisionEntities =

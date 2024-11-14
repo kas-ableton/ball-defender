@@ -22,16 +22,17 @@ auto EntityManager::check(EntityType entity)
 
     if (ballPos.y() == kPlayAreaY) {
       return OutOfBoundsCollisionEntity{};
-    } else if (ballPos.x() == kPlayAreaX || ballPos.x() == 0.0) {
-      return WallCollisionEntity{Vector::Axis::X};
+    } else if (ballPos.x() == kPlayAreaX) {
+      return WallCollisionEntity{kRightSideNormal};
+    } else if (ballPos.x() == 0.0) {
+      return WallCollisionEntity{kLeftSideNormal};
     } else if (ballPos.y() == 0.0) {
-      return WallCollisionEntity{Vector::Axis::Y};
-
-    } else if (auto blockCollisions = mBlockManager.blockCollisions(
-                   mBall.position())) {
+      return WallCollisionEntity{kBottomSideNormal};
+    } else if (auto blockCollisions =
+                   mBlockManager.blockCollisions(mBall.position())) {
       return BlockCollisionEntity{
           std::move(blockCollisions->front().blockIndices),
-          std::move(blockCollisions->front().sides)};
+          std::move(blockCollisions->front().normal)};
     }
   }
 
@@ -53,24 +54,19 @@ void EntityManager::update() {
     mBall.update();
 
     if (auto other = check(EntityType::Ball)) {
-      std::visit(overloaded{[this](const OutOfBoundsCollisionEntity&) {
-                              mpGame->setState(Game::State::BallDead);
-                            },
-                            [this](const WallCollisionEntity& wall) {
-                              mBall.reflect(wall.impactSide == Vector::Axis::X
-                                                ? Vector::Axis::Y
-                                                : Vector::Axis::X);
-                            },
-                            [this](BlockCollisionEntity& block) {
-                              for (const auto side : block.impactSides) {
-                                mBall.reflect(side == Vector::Axis::X
-                                                  ? Vector::Axis::Y
-                                                  : Vector::Axis::X);
-                              }
-                              mBlockManager.decrementBlockHitCount(
-                                  block.indices);
-                            }},
-                 *other);
+      std::visit(
+          overloaded{
+              [this](const OutOfBoundsCollisionEntity&) {
+                mpGame->setState(Game::State::BallDead);
+              },
+              [this](const WallCollisionEntity& wall) {
+                mBall.setVector(Vector::reflect(mBall.vector(), wall.normal));
+              },
+              [this](BlockCollisionEntity& block) {
+                mBall.setVector(Vector::reflect(mBall.vector(), block.normal));
+                mBlockManager.decrementBlockHitCount(block.indices);
+              }},
+          *other);
     }
 
     break;
