@@ -17,7 +17,7 @@ public:
   void reflect(const Axis axis);
   void reset();
 
-  float xDelta = std::numeric_limits<float>::min();
-  float yDelta = std::numeric_limits<float>::min();
+  float x = std::numeric_limits<float>::min();
+  float y = std::numeric_limits<float>::min();
 };
 } // namespace bd
