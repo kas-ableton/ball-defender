@@ -21,8 +21,13 @@ GameView::GameView(sf::RenderWindow* window, Game* pGame,
   mSizeScale = mpWindow->getSize().y / static_cast<float>(kWindowSizeY);
 }
 
-void GameView::addDrawObject(std::unique_ptr<sf::Drawable> object) {
+void GameView::addDrawObject(DrawObject&& object) {
   mDrawObjects.emplace_back(std::move(object));
+}
+
+
+void GameView::addDrawObject(std::unique_ptr<sf::Drawable> object) {
+  mDrawObjects.emplace_back(std::move(object), std::nullopt);
 }
 
 void GameView::addPlayAreaToDrawObjects() {
@@ -145,13 +150,15 @@ void GameView::draw() {
     break;
   }
 
-  sf::Transform Transform;
+  sf::Transform BaseTransform;
   auto paddingAmount = bd::kWindowPadding * mSizeScale;
-  Transform.translate(paddingAmount, paddingAmount);
-  Transform.scale(mSizeScale, mSizeScale);
+  BaseTransform.translate(paddingAmount, paddingAmount);
+  BaseTransform.scale(mSizeScale, mSizeScale);
 
   for (auto& obj : mDrawObjects) {
-    mpWindow->draw(*obj, Transform);
+    auto& [pObj, oTransform] = obj;
+    auto Transform = oTransform ? oTransform->combine(BaseTransform) : BaseTransform;
+    mpWindow->draw(*pObj, Transform);
   }
 }
 
