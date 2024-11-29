@@ -15,6 +15,7 @@ struct Block;
 using Blocks = std::vector<Block>;
 class Game;
 class EntityManager;
+class LaunchRay;
 class Point;
 
 const std::string kFontFile = "Courier New Bold.ttf";
@@ -33,13 +34,15 @@ public:
            const std::filesystem::path& resourcesPath);
 
   void addDrawObject(std::unique_ptr<sf::Drawable> object);
-  void addDrawObject(DrawObject&& object);
+  void addDrawObject(std::unique_ptr<sf::Drawable>&& pDrawable,
+             std::optional<sf::Transform>&& oTransform);
   void addBallToDrawObjects(const Point& position);
   void addPlayAreaToDrawObjects();
   void addBlocksToDrawObjects(const Blocks& blocks);
   void addScoreToDrawObjects(unsigned int score);
   void addGameOverTextToDrawObjects();
   void addStartScreenToDrawObjects();
+  void addLaunchRayToDrawObjects(const LaunchRay& ray);
 
   float scaleSize() const;
 

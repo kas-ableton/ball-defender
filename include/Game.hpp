@@ -5,6 +5,7 @@
 #include "Point.hpp"
 
 #include <memory>
+#include <optional>
 #include <vector>
 
 namespace sf {
@@ -41,6 +42,7 @@ private:
   GameView mGameView;
   EntityManager mEntityManager;
 
-  Point mLaunchStart;
+  std::optional<Point> mLaunchStart;
+  Point mLaunchEnd;
 };
 } // namespace bd

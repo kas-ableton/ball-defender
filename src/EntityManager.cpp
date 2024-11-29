@@ -2,6 +2,7 @@
 
 #include "Constants.hpp"
 #include "Game.hpp"
+#include "LaunchRay.hpp"
 
 #include <variant>
 
@@ -92,7 +93,28 @@ const BlockManager& EntityManager::blockManager() const {
 
 BlockManager& EntityManager::blockManager() { return mBlockManager; }
 
+std::optional<LaunchRay> EntityManager::launchRay() { return mLaunchRay; }
+
+void EntityManager::startLaunchRay(const Point& launchStart) {
+  mLaunchRay = std::make_optional(getLaunchRayStartPosition(mBall.position()));
+  mLaunchRay->onDragStart(launchStart);
+  mLaunchRay->onDragUpdate(launchStart);
+}
+
+void EntityManager::onDragUpdate(const Point& launchEnd) {
+  mLaunchRay->onDragUpdate(launchEnd);
+}
+
+void EntityManager::clearLaunchRay() { mLaunchRay = std::nullopt; }
+
 unsigned int EntityManager::score() const {
   return mBlockManager.runningRowCount();
+}
+
+Point EntityManager::getLaunchRayStartPosition(
+    const Point& ballPosition) const {
+  return Point{mBall.position().x() + static_cast<int>(bd::kBallRadius) +
+                   static_cast<int>(kLaunchRayWidth / 2),
+               bd::kLaunchRayStartPosY};
 }
 } // namespace bd

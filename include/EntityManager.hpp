@@ -3,6 +3,7 @@
 #include "Ball.hpp"
 #include "BlockManager.hpp"
 #include "Entity.hpp"
+#include "LaunchRay.hpp"
 
 #include <memory>
 #include <optional>
@@ -22,6 +23,11 @@ public:
 
   const BlockManager& blockManager() const;
   BlockManager& blockManager();
+
+  void startLaunchRay(const Point& launchStart);
+  void onDragUpdate(const Point& launchEnd);
+  void clearLaunchRay();
+  std::optional<LaunchRay> launchRay();
 
   unsigned int score() const;
 
@@ -46,10 +52,13 @@ private:
       std::variant<WallCollisionEntity, OutOfBoundsCollisionEntity,
                    BlockCollisionEntity>;
 
+  Point getLaunchRayStartPosition(const Point& ballPosition) const;
+
   std::optional<CollisionEntities> check(EntityType entity);
 
   Ball mBall;
   BlockManager mBlockManager;
+  std::optional<LaunchRay> mLaunchRay;
 
   Game* mpGame;
 };

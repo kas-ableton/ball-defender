@@ -3,6 +3,7 @@
 #include "Constants.hpp"
 #include "EntityManager.hpp"
 #include "Game.hpp"
+#include "LaunchRay.hpp"
 #include "Point.hpp"
 
 #include <SFML/Graphics.hpp>
@@ -21,10 +22,10 @@ GameView::GameView(sf::RenderWindow* window, Game* pGame,
   mSizeScale = mpWindow->getSize().y / static_cast<float>(kWindowSizeY);
 }
 
-void GameView::addDrawObject(DrawObject&& object) {
-  mDrawObjects.emplace_back(std::move(object));
+void GameView::addDrawObject(std::unique_ptr<sf::Drawable>&& pDrawable,
+                             std::optional<sf::Transform>&& oTransform) {
+  mDrawObjects.emplace_back(std::move(pDrawable), std::move(oTransform));
 }
-
 
 void GameView::addDrawObject(std::unique_ptr<sf::Drawable> object) {
   mDrawObjects.emplace_back(std::move(object), std::nullopt);
@@ -46,8 +47,7 @@ void GameView::addBlocksToDrawObjects(const Blocks& blocks) {
         sf::Vector2f(bd::kBlockSizeX, bd::kBlockSizeY));
 
     pBlock->setFillColor(sf::Color(250, 250, 250));
-    pBlock->setPosition(block.position.x(),
-                        block.position.y());
+    pBlock->setPosition(block.position.x(), block.position.y());
 
     auto pHitCountText = std::make_unique<sf::Text>();
     pHitCountText->setFont(mFont);
@@ -85,8 +85,7 @@ void GameView::addScoreToDrawObjects(unsigned int score) {
   pScoreText->setCharacterSize(characterSize);
   pScoreText->setFillColor(sf::Color(100, 250, 50));
   // TODO think about how to do this...
-  pScoreText->setPosition(bd::kPlayAreaX + (2 * bd::kWindowPadding),
-                          0);
+  pScoreText->setPosition(bd::kPlayAreaX + (2 * bd::kWindowPadding), 0);
 
   addDrawObject(std::move(pScoreText));
 }
@@ -114,10 +113,18 @@ void GameView::addStartScreenToDrawObjects() {
   addDrawObject(std::move(pStartText));
 }
 
-float GameView::scaleSize () const {
-  return mSizeScale;
+void GameView::addLaunchRayToDrawObjects(const LaunchRay& ray) {
+  const auto origin = ray.origin();
+
+  auto pRayRect = std::make_unique<sf::RectangleShape>(
+      sf::Vector2f(bd::kLaunchRayWidth, ray.length()));
+  pRayRect->setFillColor(sf::Color::Blue);
+  pRayRect->setPosition(origin.x(), origin.y());
+  pRayRect->rotate(ray.angle() + 90.0f);
+  addDrawObject(std::move(pRayRect));
 }
 
+float GameView::scaleSize() const { return mSizeScale; }
 
 void GameView::draw() {
   reset();
@@ -133,6 +140,9 @@ void GameView::draw() {
     break;
   case Game::State::LaunchReady:
     addBlocksToDrawObjects(mpEntityManager->blockManager().blocks());
+    if (auto oLaunchRay = mpEntityManager->launchRay()) {
+      addLaunchRayToDrawObjects(*oLaunchRay);
+    }
     addBallToDrawObjects(mpEntityManager->ball().position());
     break;
   case Game::State::BallInMotion:
@@ -157,7 +167,8 @@ void GameView::draw() {
 
   for (auto& obj : mDrawObjects) {
     auto& [pObj, oTransform] = obj;
-    auto Transform = oTransform ? oTransform->combine(BaseTransform) : BaseTransform;
+    auto Transform =
+        oTransform ? oTransform->combine(BaseTransform) : BaseTransform;
     mpWindow->draw(*pObj, Transform);
   }
 }

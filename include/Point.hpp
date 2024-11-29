@@ -7,6 +7,9 @@ namespace bd {
 struct Point;
 
 Point operator-(const Point& point, int value);
+Point operator+(const Point& point, int value);
+Point operator-(const Point& point, const Point& point2);
+Point operator+(const Point& point, const Point& point2);
 
 struct Point {
   Point();

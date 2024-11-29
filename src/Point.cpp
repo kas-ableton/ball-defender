@@ -4,6 +4,16 @@ namespace bd {
 Point operator-(const Point& point, int value) {
   return {point.x() - value, point.y() - value};
 }
+Point operator+(const Point& point, int value) {
+  return {point.x() + value, point.y() + value};
+}
+
+Point operator-(const Point& point, const Point& point2) {
+  return Point{point.x() - point2.x(), point.y() - point2.y()};
+}
+Point operator+(const Point& point, const Point& point2) {
+  return Point{point.x() + point2.x(), point.y() + point2.y()};
+}
 
 Point::Point()
     : mX(std::numeric_limits<int>::max()), mY(std::numeric_limits<int>::max()) {

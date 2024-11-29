@@ -38,6 +38,7 @@ Vector::Vector(Point&& startPos, Point&& endPos) {
   x = xMove / r;
 }
 
+
 void Vector::reflect(const Axis axis) {
   if (axis == Axis::Y) {
     x *= -1;
