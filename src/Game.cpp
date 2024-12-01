@@ -11,11 +11,7 @@ namespace bd {
 
 Game::Game(sf::RenderWindow* window, const std::filesystem::path& resourcesPath)
     : mGameView(window, this, &mEntityManager, resourcesPath),
-      mEntityManager(
-          {bd::kBallStartPosX,
-           static_cast<int>(bd::kBallStartPosY -
-                            (kBallRadius * mGameView.scaleSize() * 2))},
-          this) {}
+      mEntityManager({bd::kBallStartPosX, bd::kBallStartPosY}, this) {}
 
 void Game::setState(State newState) { mState = newState; }
 
