@@ -18,8 +18,9 @@ void BlockManager::reset() {
 int BlockManager::runningRowCount() const { return mRunningRowCount; }
 
 void BlockManager::advanceBlockRows() {
-  std::for_each(mBlockRows.begin(), mBlockRows.end(),
-                [](auto& blockRow) { blockRow.area.shiftY(bd::kBlockSizeY); });
+  std::for_each(mBlockRows.begin(), mBlockRows.end(), [](auto& blockRow) {
+    blockRow.area.shiftY(bd::kBlockSizeY + bd::kBlockGapSize);
+  });
 }
 
 auto BlockManager::makeBlockRowData() const -> BlockRowData {
@@ -103,8 +104,9 @@ bool BlockManager::atMaxRowHeight() const {
 
 Block BlockManager::getBlockAtIndices(const Indices& indices) const {
   auto blockRow = mBlockRows.at(indices.column);
-  auto y = blockRow.area.top();
-  auto x = indices.row * mBlockSize;
+  auto y = blockRow.area.top() + bd::kBlockGapSize;
+  auto x = indices.row * mBlockSize +
+           ((indices.row + 1) * bd::kBlockGapSize);
 
   return {Point{x, y}, blockRow.blocks[indices.row]};
 }

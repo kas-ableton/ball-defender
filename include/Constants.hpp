@@ -14,7 +14,7 @@ constexpr float kWindowSizeY = 880.f;
 
 constexpr unsigned int kWindowPadding = 20;
 
-constexpr int kPlayAreaX = 720;
+constexpr int kPlayAreaX = 725;
 constexpr int kPlayAreaY = kWindowSizeY - (2 * kWindowPadding);
 
 constexpr unsigned int kBallRadius = 10;
@@ -24,11 +24,12 @@ constexpr int kLaunchRayStartPosY = kBallStartPosY + kBallRadius;
 
 constexpr float kVelocity = 10.0f;
 
-constexpr int kBlockSizeX = 45;
-constexpr int kBlockSizeY = 45;
+constexpr int kBlockSizeX = 55;
+constexpr int kBlockSizeY = 55;
 constexpr int kBlockHitCountTextSize = 20;
+constexpr int kBlockGapSize = 5;
 
-constexpr int kBlockRowCount = kPlayAreaX / kBlockSizeX;
+constexpr int kBlockRowCount = 12;// kPlayAreaX / kBlockSizeX;
 
 constexpr float kLaunchRayWidth = 5.f;
 } // namespace bd
