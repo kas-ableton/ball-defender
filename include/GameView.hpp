@@ -43,10 +43,11 @@ public:
   void addGameOverTextToDrawObjects();
   void addStartScreenToDrawObjects();
   void addLaunchRayToDrawObjects(const LaunchRay& ray);
+  void addFramerateToDrawObjects(float deltaTimeSec);
 
   float scaleSize() const;
 
-  void draw();
+  void draw(float deltaTimeSec);
 
 private:
   void reset();

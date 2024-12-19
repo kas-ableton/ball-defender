@@ -124,10 +124,30 @@ void GameView::addLaunchRayToDrawObjects(const LaunchRay& ray) {
   addDrawObject(std::move(pRayRect));
 }
 
+void GameView::addFramerateToDrawObjects(float deltaTimeSec) {
+  auto pScoreText = std::make_unique<sf::Text>();
+
+  static const unsigned int characterSize = 50;
+
+  const auto frameRate = 1 / deltaTimeSec;
+
+  pScoreText->setFont(mFont);
+  pScoreText->setString(std::to_string(frameRate));
+  pScoreText->setCharacterSize(characterSize);
+  pScoreText->setFillColor(sf::Color(100, 250, 50));
+  // TODO think about how to do this...
+  pScoreText->setPosition(bd::kPlayAreaX + (2 * bd::kWindowPadding),
+                          bd::kPlayAreaY - (5 * bd::kWindowPadding));
+
+  addDrawObject(std::move(pScoreText));
+}
+
 float GameView::scaleSize() const { return mSizeScale; }
 
-void GameView::draw() {
+void GameView::draw(float deltaTimeSec) {
   reset();
+
+  addFramerateToDrawObjects(deltaTimeSec);
 
   if (mpGame->state() != bd::Game::State::Unstarted) {
     addPlayAreaToDrawObjects();

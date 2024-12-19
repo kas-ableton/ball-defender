@@ -32,11 +32,16 @@ int main(int argc, char* argv[]) {
       {desktop.width, desktop.height - kTitleBarHeightHeuristic},
       kTitle,
       sf::Style::Titlebar | sf::Style::Close};
-  window.setFramerateLimit(144);
+
+  window.setVerticalSyncEnabled(true);
 
   bd::Game gameInstance(&window, *resourcesPath);
 
+  // this loop is run once per frame
+  // frame rate is how many frames per second
+  auto time = std::chrono::steady_clock::now();
   while (window.isOpen()) {
+    const auto current = std::chrono::steady_clock::now();
     for (auto event = sf::Event{}; window.pollEvent(event);) {
       if (event.type == sf::Event::Closed) {
         window.close();
@@ -46,9 +51,14 @@ int main(int argc, char* argv[]) {
     }
     window.clear();
 
-    gameInstance.run();
+    // time passed since last frame
+    const std::chrono::duration<double> deltaTime = current - time;
+
+    gameInstance.run(static_cast<float>(deltaTime.count()));
 
     window.display();
+
+    time = current;
   }
 
   return 0;

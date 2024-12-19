@@ -35,8 +35,6 @@ void Game::handleEvent(const sf::Event& event) {
       mEntityManager.onDragUpdate(mLaunchEnd);
 
       auto lr = *mEntityManager.launchRay();
-
-      mGameView.draw();
     } else if (event.type == sf::Event::MouseButtonReleased) {
       // assert(mLaunchStart, "mLaunchStart invalid");
       mEntityManager.clearLaunchRay();
@@ -50,9 +48,9 @@ void Game::handleEvent(const sf::Event& event) {
   }
 }
 
-void Game::run() {
-  mEntityManager.update();
-  mGameView.draw();
+void Game::run(float deltaTimeSec) {
+  mEntityManager.update(deltaTimeSec);
+  mGameView.draw(deltaTimeSec);
 }
 
 unsigned int Game::score() const { return mEntityManager.score(); }

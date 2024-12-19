@@ -12,7 +12,7 @@ public:
   const Vector& vector() const;
   void setVector(const Vector& newVector);
   void onLaunch(Point&& startPos, Point&& endPos);
-  void update();
+  void update(float deltaTimeSec);
   void reset();
 
 private:

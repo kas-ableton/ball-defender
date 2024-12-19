@@ -3,6 +3,7 @@
 #include "Point.hpp"
 
 #include <iostream>
+#include <optional>
 
 namespace bd {
 struct Rect {

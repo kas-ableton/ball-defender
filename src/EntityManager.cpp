@@ -40,7 +40,7 @@ auto EntityManager::check(EntityType entity)
   return {};
 }
 
-void EntityManager::update() {
+void EntityManager::update(float deltaTimeSec) {
   switch (mpGame->state()) {
     // nothing to do, wait for user input
   case Game::State::Unstarted:
@@ -52,7 +52,7 @@ void EntityManager::update() {
     mpGame->setState(Game::State::LaunchReady);
     break;
   case Game::State::BallInMotion:
-    mBall.update();
+    mBall.update(deltaTimeSec);
 
     if (auto other = check(EntityType::Ball)) {
       std::visit(

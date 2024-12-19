@@ -25,9 +25,9 @@ void Ball::onLaunch(Point&& startPos, Point&& endPos) {
   mVector = Vector{std::move(startPos), std::move(endPos)};
 }
 
-void Ball::update() {
-  auto newXPos = mInternalBallPosX + (mVector.x * bd::kVelocity);
-  auto newYPos = mInternalBallPosY + mVector.y * bd::kVelocity;
+void Ball::update(float deltaTimeSec) {
+  auto newXPos = mInternalBallPosX + (mVector.x * deltaTimeSec * bd::kVelocity);
+  auto newYPos = mInternalBallPosY + mVector.y * deltaTimeSec * bd::kVelocity;
 
   mInternalBallPosX = std::clamp(newXPos, 0.0f, static_cast<float>(kPlayAreaX));
   mInternalBallPosY = std::clamp(newYPos, 0.0f, static_cast<float>(kPlayAreaY));

@@ -17,7 +17,7 @@ class EntityManager {
 public:
   EntityManager(Point&& ballStartPos, Game* pGame);
 
-  void update();
+  void update(float deltaTimeSec);
 
   Ball& ball();
 

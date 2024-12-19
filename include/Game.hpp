@@ -32,7 +32,9 @@ public:
 
   void handleEvent(const sf::Event& event);
 
-  void run();
+  // @p deltaTimeSec is the amount of time elapsed since the last frame was
+  // processed
+  void run(float deltaTimeSec);
 
   unsigned int score() const;
 
