@@ -1,6 +1,7 @@
 #include "BlockManager.hpp"
 
 #include "Ball.hpp"
+#include "CollisionConstants.hpp"
 
 #include <random>
 
@@ -115,8 +116,8 @@ Block BlockManager::getBlockAtIndices(const Indices& indices) const {
 
 // return the collision normal
 std::optional<std::vector<BlockManager::BlockCollision>>
-BlockManager::blockCollisions(const Ball& ball) {
-  auto ballRect = Rect{ball.position(), 2 * bd::kBallRadius};
+BlockManager::blockCollisions(const Ball& ball, int ballDiameter) {
+  auto ballRect = Rect{ball.position(), ballDiameter};
 
   auto result = std::vector<BlockCollision>{};
 

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Constants.hpp"
 #include "Rect.hpp"
 #include "Vector.hpp"
 
@@ -43,7 +42,7 @@ public:
     Vector normal;
   };
   std::optional<std::vector<BlockManager::BlockCollision>>
-  blockCollisions(const Ball& ball);
+  blockCollisions(const Ball& ball, int ballDiameter);
 
   // decrements HC, removes block row when empty
   void decrementBlockHitCount(const Indices& indices);

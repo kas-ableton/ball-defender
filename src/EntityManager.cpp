@@ -1,6 +1,7 @@
 #include "EntityManager.hpp"
 
 #include "Constants.hpp"
+#include "CollisionConstants.hpp"
 #include "Game.hpp"
 #include "LaunchRay.hpp"
 
@@ -32,7 +33,7 @@ auto EntityManager::check(EntityType entity)
     } else if (ballPos.y() == 0.0) {
       return WallCollisionEntity{kBottomSideNormal};
     } else if (auto blockCollisions =
-                   mBlockManager.blockCollisions(mBall)) {
+                   mBlockManager.blockCollisions(mBall, bd::kBallRadius * 2)) {
       return BlockCollisionEntity{
           std::move(blockCollisions->front().blockIndices),
           std::move(blockCollisions->front().normal)};
