@@ -8,6 +8,7 @@
 
 namespace bd {
 
+
 template <class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
 template <class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
@@ -114,8 +115,9 @@ unsigned int EntityManager::score() const {
 
 Point EntityManager::getLaunchRayStartPosition(
     const Point& ballPosition) const {
+  static const int kLaunchRayStartPosY = kBallStartPosY + kBallRadius;
   return Point{mBall.position().x() + static_cast<int>(bd::kBallRadius) +
                    static_cast<int>(kLaunchRayWidth / 2),
-               bd::kLaunchRayStartPosY};
+               kLaunchRayStartPosY};
 }
 } // namespace bd
