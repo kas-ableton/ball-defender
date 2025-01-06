@@ -183,8 +183,10 @@ void GameView::draw(float deltaTimeSec) {
   }
 
   sf::Transform BaseTransform;
-  auto paddingAmount = bd::kWindowPadding * mSizeScale;
-  BaseTransform.translate(paddingAmount, paddingAmount);
+  const auto yTranslate = bd::kWindowPadding * mSizeScale;
+  const float xTranslate =
+      (mpWindow->getSize().x - (bd::kPlayAreaX * mSizeScale)) / 2;
+  BaseTransform.translate(xTranslate, yTranslate);
   BaseTransform.scale(mSizeScale, mSizeScale);
 
   for (auto& obj : mDrawObjects) {
