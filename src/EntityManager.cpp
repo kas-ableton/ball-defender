@@ -9,12 +9,13 @@
 
 namespace bd {
 
+constexpr int kMaxBallPositionX = bd::kPlayAreaX - bd::kBallRadius;
 
 template <class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
 template <class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
 EntityManager::EntityManager(Point&& ballStartPos, Game* pGame)
-    : mBall(std::move(ballStartPos), static_cast<float>(bd::kPlayAreaX),
+    : mBall(std::move(ballStartPos), static_cast<float>(kMaxBallPositionX),
             static_cast<float>(bd::kPlayAreaY)),
       mBlockManager(kBlockSizeY, kPlayAreaY - bd::kBlockSizeY, bd::kPlayAreaX),
       mpGame(pGame) {}
@@ -26,7 +27,7 @@ auto EntityManager::check(EntityType entity)
 
     if (ballPos.y() == kPlayAreaY) {
       return OutOfBoundsCollisionEntity{};
-    } else if (ballPos.x() == kPlayAreaX) {
+    } else if (ballPos.x() == kMaxBallPositionX) {
       return WallCollisionEntity{kRightSideNormal};
     } else if (ballPos.x() == 0.0) {
       return WallCollisionEntity{kLeftSideNormal};
