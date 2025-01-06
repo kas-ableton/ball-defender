@@ -17,7 +17,7 @@ template <class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 EntityManager::EntityManager(Point&& ballStartPos, Game* pGame)
     : mBall(std::move(ballStartPos), static_cast<float>(kMaxBallPositionX),
             static_cast<float>(bd::kPlayAreaY)),
-      mBlockManager(kBlockSizeY, kPlayAreaY - bd::kBlockSizeY, bd::kPlayAreaX),
+      mBlockManager(kBlockSizeY, kPlayAreaY - (2 * bd::kBlockSizeY), bd::kPlayAreaX),
       mpGame(pGame) {}
 
 auto EntityManager::check(EntityType entity)
