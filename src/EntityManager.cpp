@@ -30,7 +30,7 @@ auto EntityManager::check(EntityType entity)
     } else if (ballPos.y() == 0.0) {
       return WallCollisionEntity{kBottomSideNormal};
     } else if (auto blockCollisions =
-                   mBlockManager.blockCollisions(mBall.position())) {
+                   mBlockManager.blockCollisions(mBall)) {
       return BlockCollisionEntity{
           std::move(blockCollisions->front().blockIndices),
           std::move(blockCollisions->front().normal)};
