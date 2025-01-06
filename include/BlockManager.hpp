@@ -9,6 +9,9 @@
 #include <vector>
 
 namespace bd {
+
+constexpr int kBlockRowCount = 12;
+
 class Ball;
 
 struct Block {

@@ -14,6 +14,8 @@
 
 namespace bd {
 
+constexpr int kBlockHitCountTextSize = 20;
+
 GameView::GameView(sf::RenderWindow* window, Game* pGame,
                    EntityManager* pEntityManager,
                    const std::filesystem::path& resourcesPath)

@@ -22,12 +22,5 @@ constexpr int kBallStartPosX = kPlayAreaX / 2;
 constexpr int kBallStartPosY = kPlayAreaY - (kBallRadius * 2);
 constexpr int kLaunchRayStartPosY = kBallStartPosY + kBallRadius;
 
-constexpr int kBlockSizeX = 55;
-constexpr int kBlockSizeY = 55;
-constexpr int kBlockHitCountTextSize = 20;
-constexpr int kBlockGapSize = 5;
-
-constexpr int kBlockRowCount = 12;// kPlayAreaX / kBlockSizeX;
-
 constexpr float kLaunchRayWidth = 5.f;
 } // namespace bd

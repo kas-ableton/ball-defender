@@ -12,6 +12,8 @@
 namespace bd {
 class Game;
 
+constexpr int kBlockSizeX = 55;
+constexpr int kBlockSizeY = 55;
 
 class EntityManager {
 public:

@@ -6,6 +6,8 @@
 
 namespace bd {
 
+constexpr int kBlockGapSize = 5;
+
 BlockManager::BlockManager(int blockSize, int max, int blockRowWidth)
     : mBlockSize(blockSize), mMaxRowHeight(max), mBlockRowWidth(blockRowWidth) {
 }
@@ -18,8 +20,8 @@ void BlockManager::reset() {
 int BlockManager::runningRowCount() const { return mRunningRowCount; }
 
 void BlockManager::advanceBlockRows() {
-  std::for_each(mBlockRows.begin(), mBlockRows.end(), [](auto& blockRow) {
-    blockRow.area.shiftY(bd::kBlockSizeY + bd::kBlockGapSize);
+  std::for_each(mBlockRows.begin(), mBlockRows.end(), [this](auto& blockRow) {
+    blockRow.area.shiftY(mBlockSize + bd::kBlockGapSize);
   });
 }
 
