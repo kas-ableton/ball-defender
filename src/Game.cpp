@@ -37,10 +37,26 @@ void Game::handleEvent(const sf::Event& event) {
       auto lr = *mEntityManager.launchRay();
     } else if (event.type == sf::Event::MouseButtonReleased) {
       // assert(mLaunchStart, "mLaunchStart invalid");
+
+      // handle invalid ball trajectory
+      if (mLaunchStart->x() == event.mouseButton.x &&
+          mLaunchStart->y() == event.mouseButton.y) {
+        mLaunchStart = std::nullopt;
+        setState(State::BallDead);
+        return;
+      }
+
       mEntityManager.clearLaunchRay();
       mEntityManager.ball().onLaunch(
           std::move(*mLaunchStart), {event.mouseButton.x, event.mouseButton.y});
       mLaunchStart = std::nullopt;
+
+      // don't play a ball that only moves horizontally
+      if (mEntityManager.ball().vector().y == 0.f) {
+        setState(State::BallDead);
+        return;
+      }
+
       setState(State::BallInMotion);
     }
   } else if (state() == State::GameOver) {
