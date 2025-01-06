@@ -22,9 +22,6 @@ constexpr int kBallStartPosX = kPlayAreaX / 2;
 constexpr int kBallStartPosY = kPlayAreaY - (kBallRadius * 2);
 constexpr int kLaunchRayStartPosY = kBallStartPosY + kBallRadius;
 
-// pixels per second
-constexpr float kVelocity = 1440.0f;
-
 constexpr int kBlockSizeX = 55;
 constexpr int kBlockSizeY = 55;
 constexpr int kBlockHitCountTextSize = 20;

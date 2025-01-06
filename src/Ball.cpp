@@ -1,36 +1,35 @@
 #include "Ball.hpp"
 
-#include "Constants.hpp"
-
 #include <algorithm>
-#include <memory>
 #include <iostream>
+#include <memory>
 
 namespace bd {
-Ball::Ball(Point&& ballStartPos)
-    : mLaunchPosition(std::move(ballStartPos)), mPosition(mLaunchPosition),
+
+// pixels per second
+constexpr float kVelocity = 1440.0f;
+
+Ball::Ball(Point&& ballStartPos, float MaxXPos, float MaxYPos)
+    : mMaxXPos(MaxXPos), mMaxYPos(MaxYPos),
+      mLaunchPosition(std::move(ballStartPos)), mPosition(mLaunchPosition),
       mInternalBallPosX(mPosition.x()), mInternalBallPosY(mPosition.y()) {}
 
 Point Ball::position() const { return mPosition; }
 
-void Ball::setVector(const Vector& newVector) {
-  mVector = newVector;
-}
+void Ball::setVector(const Vector& newVector) { mVector = newVector; }
 
-const Vector& Ball::vector() const {
-  return mVector;
-}
+const Vector& Ball::vector() const { return mVector; }
 
 void Ball::onLaunch(Point&& startPos, Point&& endPos) {
   mVector = Vector{std::move(startPos), std::move(endPos)};
 }
 
 void Ball::update(float deltaTimeSec) {
-  auto newXPos = mInternalBallPosX + (mVector.x * deltaTimeSec * bd::kVelocity);
-  auto newYPos = mInternalBallPosY + mVector.y * deltaTimeSec * bd::kVelocity;
+  auto newXPos = mInternalBallPosX + (mVector.x * deltaTimeSec * kVelocity);
+  auto newYPos = mInternalBallPosY + mVector.y * deltaTimeSec * kVelocity;
 
-  mInternalBallPosX = std::clamp(newXPos, 0.0f, static_cast<float>(kPlayAreaX));
-  mInternalBallPosY = std::clamp(newYPos, 0.0f, static_cast<float>(kPlayAreaY));
+  mInternalBallPosX = std::clamp(newXPos, 0.0f, static_cast<float>(mMaxXPos));
+  mInternalBallPosY = std::clamp(newYPos, 0.0f, static_cast<float>(mMaxYPos));
 
   mPosition.setX(static_cast<int>(mInternalBallPosX));
   mPosition.setY(static_cast<int>(mInternalBallPosY));

@@ -12,7 +12,8 @@ template <class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
 template <class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
 EntityManager::EntityManager(Point&& ballStartPos, Game* pGame)
-    : mBall(std::move(ballStartPos)),
+    : mBall(std::move(ballStartPos), static_cast<float>(bd::kPlayAreaX),
+            static_cast<float>(bd::kPlayAreaY)),
       mBlockManager(kBlockSizeY, kPlayAreaY - bd::kBlockSizeY, bd::kPlayAreaX),
       mpGame(pGame) {}
 

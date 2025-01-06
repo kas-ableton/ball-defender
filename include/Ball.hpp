@@ -7,7 +7,7 @@
 namespace bd {
 class Ball {
 public:
-  Ball(Point&& ballStartPos);
+  Ball(Point&& ballStartPos, float MaxXPos, float MaxYPos);
   Point position() const;
   const Vector& vector() const;
   void setVector(const Vector& newVector);
@@ -16,6 +16,8 @@ public:
   void reset();
 
 private:
+  float mMaxXPos;
+  float mMaxYPos;
   Vector mVector;
   Point mLaunchPosition;
   Point mPosition;
