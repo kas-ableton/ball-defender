@@ -37,8 +37,7 @@ void GameView::addPlayAreaToDrawObjects() {
   auto pPlayArea = std::make_unique<sf::RectangleShape>(
       sf::Vector2f(bd::kPlayAreaX, bd::kPlayAreaY));
 
-  pPlayArea->setFillColor(sf::Color(100, 250, 50));
-  pPlayArea->setPosition(0.0f, 0.0f);
+  pPlayArea->setFillColor(sf::Color(40, 40, 40));
 
   addDrawObject(std::move(pPlayArea));
 }
@@ -129,7 +128,7 @@ void GameView::addLaunchRayToDrawObjects(const LaunchRay& ray) {
 void GameView::addFramerateToDrawObjects(float deltaTimeSec) {
   auto pScoreText = std::make_unique<sf::Text>();
 
-  static const unsigned int characterSize = 50;
+  static const unsigned int characterSize = 25;
 
   const auto frameRate = 1 / deltaTimeSec;
 
@@ -139,7 +138,7 @@ void GameView::addFramerateToDrawObjects(float deltaTimeSec) {
   pScoreText->setFillColor(sf::Color(100, 250, 50));
   // TODO think about how to do this...
   pScoreText->setPosition(bd::kPlayAreaX + (2 * bd::kWindowPadding),
-                          bd::kPlayAreaY - (5 * bd::kWindowPadding));
+                          kBallStartPosY);
 
   addDrawObject(std::move(pScoreText));
 }
