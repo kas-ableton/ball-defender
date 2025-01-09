@@ -46,30 +46,33 @@ int BlockManager::makeBlockHitCount() const {
   int lowest = 0;
   int highest = 0;
 
-  if (mRunningRowCount < 5) {
+  if (mRunningRowCount < 3) {
     lowest = 1;
     highest = 1;
-  } else if (mRunningRowCount < 10) {
+  } else if (mRunningRowCount < 5) {
     lowest = 1;
     highest = 2;
-  } else if (mRunningRowCount < 20) {
+  } else if (mRunningRowCount < 10) {
     lowest = 1;
     highest = 4;
-  } else if (mRunningRowCount < 30) {
+  } else if (mRunningRowCount < 20) {
     lowest = 2;
     highest = 7;
-  } else if (mRunningRowCount < 40) {
+  } else if (mRunningRowCount < 30) {
     lowest = 3;
     highest = 10;
-  } else if (mRunningRowCount < 50) {
+  } else if (mRunningRowCount < 40) {
     lowest = 5;
     highest = 15;
-  } else if (mRunningRowCount < 70) {
-    lowest = 8;
+  } else if (mRunningRowCount < 50) {
+    lowest = 5;
     highest = 20;
+  } else if (mRunningRowCount < 60) {
+    lowest = 8;
+    highest = 40;
   } else {
     lowest = 10;
-    highest = 25;
+    highest = 60;
   }
 
   if (lowest == highest) {
