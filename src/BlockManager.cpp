@@ -105,13 +105,49 @@ bool BlockManager::atMaxRowHeight() const {
   return mBlockRows.front().area.bottom() >= mMaxRowHeight;
 }
 
+Color BlockManager::getBlockColor(int hitCount) const {
+  if (hitCount <= 2)
+  {
+    return Color{215, 252, 3};
+  }
+  else if (hitCount <= 4)
+  {
+    return Color{16, 156, 58};
+  }
+  else if (hitCount <= 7)
+  {
+    return Color{145, 2, 201};
+  }
+  else if (hitCount <= 10)
+  {
+    return Color{196, 82, 177};
+  }
+  else if (hitCount <= 15)
+  {
+    return Color{109, 214, 193};
+  }
+  else if (hitCount <= 20)
+  {
+    return Color{90, 242, 138};
+  }
+  else if (hitCount <= 25)
+  {
+    return Color{219, 197, 31};
+  }
+  else
+  {
+    return Color{227, 41, 56};
+  }
+}
+
 Block BlockManager::getBlockAtIndices(const Indices& indices) const {
   auto blockRow = mBlockRows.at(indices.column);
   auto y = blockRow.area.top() + bd::kBlockGapSize;
   auto x = indices.row * mBlockSize +
            ((indices.row + 1) * bd::kBlockGapSize);
 
-  return {Point{x, y}, blockRow.blocks[indices.row]};
+  const auto hc = blockRow.blocks[indices.row];
+  return {Point{x, y}, getBlockColor(hc), hc};
 }
 
 // return the collision normal

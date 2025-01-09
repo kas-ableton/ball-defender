@@ -47,14 +47,16 @@ void GameView::addBlocksToDrawObjects(const Blocks& blocks) {
     auto pBlock = std::make_unique<sf::RectangleShape>(
         sf::Vector2f(bd::kBlockSizeX, bd::kBlockSizeY));
 
-    pBlock->setFillColor(sf::Color(250, 250, 250));
+    pBlock->setFillColor(
+        sf::Color(block.color.R, block.color.G, block.color.B, block.color.A));
     pBlock->setPosition(block.position.x(), block.position.y());
 
     auto pHitCountText = std::make_unique<sf::Text>();
     pHitCountText->setFont(mFont);
     pHitCountText->setString(std::to_string(block.hitCount));
     pHitCountText->setCharacterSize(bd::kBlockHitCountTextSize);
-    pHitCountText->setFillColor(sf::Color::Red);
+    const auto textColor = block.color.invert();
+    pHitCountText->setFillColor(sf::Color(textColor.R, textColor.G, textColor.B, textColor.A));
 
     const auto textSize = pHitCountText->getLocalBounds();
     const auto blockPos = pBlock->getPosition();

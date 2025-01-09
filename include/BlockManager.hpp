@@ -13,8 +13,22 @@ constexpr int kBlockRowCount = 12;
 
 class Ball;
 
+struct Color {
+  uint8_t R;
+  uint8_t G;
+  uint8_t B;
+  uint8_t A = 255;
+
+  Color invert(bool withAlpha = false) const {
+    // need to construct 8-bit int because of integer promotion
+    return {uint8_t(R ^ 0xFF), uint8_t(G ^ 0xFF), uint8_t(B ^ 0xFF),
+            withAlpha ? uint8_t(A ^ 0xFF) : A};
+  }
+};
+
 struct Block {
   Point position;
+  Color color;
   int hitCount;
 };
 using Blocks = std::vector<Block>;
@@ -31,13 +45,13 @@ public:
   void reset();
 
   // for drawing
-  // NOTE: positions are relative to the Play Area
   Blocks blocks() const;
 
   // operations for collision detection
   struct BlockCollision {
     BlockCollision(Indices&& indices, Vector&& collisionNormal)
-        : blockIndices(std::move(indices)), normal(std::move(collisionNormal)) {}
+        : blockIndices(std::move(indices)), normal(std::move(collisionNormal)) {
+    }
     Indices blockIndices;
     Vector normal;
   };
@@ -72,6 +86,7 @@ private:
   // New rows are added from the top of the play area
   void advanceBlockRows();
 
+  Color getBlockColor(int hitCount) const;
   Block getBlockAtIndices(const Indices&) const;
 
   std::vector<BlockRow> mBlockRows;
