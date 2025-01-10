@@ -105,14 +105,23 @@ void GameView::addGameOverTextToDrawObjects() {
 }
 
 void GameView::addStartScreenToDrawObjects() {
-  auto pStartText = std::make_unique<sf::Text>();
+  auto pTitleText = std::make_unique<sf::Text>();
+  pTitleText->setFont(mFont);
+  pTitleText->setString("Ball Defender");
+  pTitleText->setCharacterSize(50);
+  const auto TitleSize = pTitleText->getLocalBounds().getSize();
+  pTitleText->setPosition((bd::kPlayAreaX - TitleSize.x) / 2,
+                          bd::kWindowSizeY / 4);
 
+  auto pStartText = std::make_unique<sf::Text>();
   pStartText->setFont(mFont);
   pStartText->setString("Click anywhere to start");
   pStartText->setCharacterSize(30);
-  pStartText->setPosition(bd::kWindowSizeX - bd::kPlayAreaX,
+  const auto StartTextSize = pStartText->getLocalBounds().getSize();
+  pStartText->setPosition((bd::kPlayAreaX - StartTextSize.x) / 2,
                           bd::kWindowSizeY / 2);
 
+  addDrawObject(std::move(pTitleText));
   addDrawObject(std::move(pStartText));
 }
 
