@@ -42,7 +42,10 @@ public:
 
   BlockManager(int blockSize, int MaxRowHeight, int blockRowWidth);
 
+  // clear blocks and row count
   void reset();
+
+  void disable();
 
   // for drawing
   Blocks blocks() const;
@@ -71,6 +74,8 @@ public:
   bool atMaxRowHeight() const;
 
 private:
+  bool isDisabled = false;
+
   using hitCount = int;
   using BlockRowData = std::array<hitCount, bd::kBlockRowCount>;
   struct BlockRow {

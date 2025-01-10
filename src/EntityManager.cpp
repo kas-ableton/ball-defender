@@ -46,9 +46,11 @@ auto EntityManager::check(EntityType entity)
 
 void EntityManager::update(float deltaTimeSec) {
   switch (mpGame->state()) {
-    // nothing to do, wait for user input
-  case Game::State::Unstarted:
   case Game::State::LaunchReady:
+    // nothing to do, wait for user input
+    break;
+  case Game::State::Unstarted:
+    mBlockManager.reset();
     break;
   case Game::State::StartNewRound:
     mBlockManager.addNewRow();
@@ -83,7 +85,7 @@ void EntityManager::update(float deltaTimeSec) {
     }
     break;
   case Game::State::GameOver:
-    mBlockManager.reset();
+    mBlockManager.disable();
     mBall.reset();
     break;
   }

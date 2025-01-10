@@ -16,6 +16,11 @@ BlockManager::BlockManager(int blockSize, int max, int blockRowWidth)
 void BlockManager::reset() {
   mBlockRows.clear();
   mRunningRowCount = 0;
+  isDisabled = false;
+}
+
+void BlockManager::disable() {
+  isDisabled = true;
 }
 
 int BlockManager::runningRowCount() const { return mRunningRowCount; }
@@ -109,6 +114,11 @@ bool BlockManager::atMaxRowHeight() const {
 }
 
 Color BlockManager::getBlockColor(int hitCount) const {
+  if (isDisabled)
+  {
+    return Color{108, 112, 109};
+  }
+
   if (hitCount <= 2)
   {
     return Color{215, 252, 3};

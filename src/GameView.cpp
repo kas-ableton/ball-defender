@@ -98,8 +98,8 @@ void GameView::addGameOverTextToDrawObjects() {
 
   pGameOverText->setFont(mFont);
   pGameOverText->setString("Game over!");
-  pGameOverText->setCharacterSize(50);
-  pGameOverText->setPosition(bd::kWindowSizeX / 2, bd::kWindowSizeY / 2);
+  pGameOverText->setCharacterSize(30);
+  pGameOverText->setPosition(bd::kPlayAreaX + (2 * bd::kWindowPadding), 60);
 
   addDrawObject(std::move(pGameOverText));
 }

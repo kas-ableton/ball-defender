@@ -60,7 +60,9 @@ void Game::handleEvent(const sf::Event& event) {
       setState(State::BallInMotion);
     }
   } else if (state() == State::GameOver) {
-    setState(State::Unstarted);
+    if (event.type == sf::Event::MouseButtonReleased) {
+      setState(State::Unstarted);
+    }
   }
 }
 
