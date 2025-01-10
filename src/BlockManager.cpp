@@ -121,35 +121,35 @@ Color BlockManager::getBlockColor(int hitCount) const {
 
   if (hitCount <= 2)
   {
-    return Color{215, 252, 3};
+    return Color{215, 245, 95};
   }
   else if (hitCount <= 4)
   {
-    return Color{16, 156, 58};
+    return Color{95, 245, 168};
   }
   else if (hitCount <= 7)
   {
-    return Color{145, 2, 201};
+    return Color{185, 95, 245};
   }
   else if (hitCount <= 10)
   {
-    return Color{196, 82, 177};
+    return Color{95, 112, 245};
   }
   else if (hitCount <= 15)
   {
-    return Color{109, 214, 193};
+    return Color{245, 138, 95};
   }
   else if (hitCount <= 20)
   {
-    return Color{90, 242, 138};
+    return Color{95, 245, 243};
   }
   else if (hitCount <= 25)
   {
-    return Color{219, 197, 31};
+    return Color{245, 95, 147};
   }
   else
   {
-    return Color{227, 41, 56};
+    return Color{238, 245, 95};
   }
 }
 
